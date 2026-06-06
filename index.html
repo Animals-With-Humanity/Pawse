@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PAWSE 2026 — Book Your Pass.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;700&display=swap"
+    rel="stylesheet" />
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="./logo.png">
+  <link rel="shortcut icon" href="./logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Baloo+2:wght@400;700&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <style>
+    /* ── Single-step form overrides --─-------─ */
+    .single-form-card {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 2.5rem;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 40px rgba(0, 0, 0, 0.07);
+    }
+
+    /* Section divider inside form */
+    .form-section {
+      margin-bottom: 2rem;
+    }
+
+    .form-section-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #9CA3AF;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    /* Compact counter */
+    .qty-counter-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 1.5px solid rgba(0, 0, 0, 0.13);
+      border-radius: 10px;
+      overflow: hidden;
+      width: fit-content;
+    }
+
+    .qty-counter-wrap .qty-btn {
+      background: transparent;
+      border: none;
+      width: 40px;
+      height: 40px;
+      font-size: 1.3rem;
+      font-weight: 400;
+      /* color: #374151; */
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .qty-counter-wrap .qty-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .qty-counter-wrap .qty-btn:disabled {
+      color: #d1d5db;
+      cursor: not-allowed;
+    }
+
+    .qty-counter-wrap .qty-num {
+      min-width: 38px;
+      text-align: center;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+
+      border-left: 1px solid rgba(0, 0, 0, 0.1);
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .qty-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .qty-label-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .qty-main-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+
+    }
+
+    .qty-sub-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem;
+      color: #9CA3AF;
+      margin-top: 2px;
+    }
+
+    @media (max-width: 480px) {
+      .single-form-card {
+        padding: 1.5rem;
+      }
+    }
+
+    /* ── Ticket Type Cards ─── */
+    .ticket-type-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.125rem;
+      border: 1.5px solid rgba(0, 0, 0, 0.12);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+      background: #fff;
+      position: relative;
+    }
+
+    .ticket-type-card:hover:not(.sold-out) {
+      border-color: #06b6d4;
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.08);
+    }
+
+    .ticket-type-card.selected {
+      border-color: #06b6d4;
+      /* background: rgba(6, 182, 212, 0.04); */
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.12);
+    }
+
+    .ticket-type-card.sold-out {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: #f9fafb;
+    }
+
+    .ticket-type-card-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .ticket-type-radio {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #d1d5db;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.18s;
+    }
+
+    .ticket-type-card.selected .ticket-type-radio {
+      border-color: #06b6d4;
+    }
+
+    .ticket-type-radio-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #06b6d4;
+      display: none;
+    }
+
+    .ticket-type-card.selected .ticket-type-radio-dot {
+      display: block;
+    }
+
+    .ticket-type-info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .ticket-type-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: #111827;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ticket-type-desc {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      color: #6B7280;
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ticket-type-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+
+    .ticket-type-price {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .ticket-type-avail {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.68rem;
+      color: #6B7280;
+    }
+
+    .ticket-type-avail.low {
+      color: #f59e0b;
+      font-weight: 600;
+    }
+
+    .sold-out-badge {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: #ef4444;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      padding: 2px 7px;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Ambient background -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
+
+  <!-- Floating Shapes -->
+  <div class="floating-shape shape-1"></div>
+  <div class="floating-shape shape-2"></div>
+  <div class="floating-shape shape-3"></div>
+  <div class="floating-shape shape-4"></div>
+  <div class="floating-shape shape-5"></div>
+
+  <!-- Header -->
+  <header style="
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 50;
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  ">
+    <div
+      style="max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; height: 80px;">
+      <a href="#" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
+        <!-- <img src="./logo.png" alt="AWH Logo" style="height: 40px; width: 40px; object-fit: contain;" /> -->
+        <img src="./logo.png" alt="AWH Logo" style="height: 40px; width: 40px; object-fit: contain;" />
+        <div style="display: flex; flex-direction: column;">
+          <span
+            style="font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:800;color:#111827;line-height:1;">PAWSE
+          </span>
+
+          <span
+            style="font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;color:#06b6d4;text-transform:uppercase;letter-spacing:0.15em;margin-top:3px;">Animals
+            With Humanity</span>
+        </div>
+      </a>
+
+      <nav id="desktop-nav" style="display: flex; align-items: center; gap: 0.75rem;">
+        <a href="my-tickets.html"
+          style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.875rem;color:#4B5563;text-decoration:none;padding:0.5rem 1rem;border-radius:9999px;transition:color 0.2s,background 0.2s;"
+          onmouseover="this.style.color='#06b6d4';this.style.background='rgba(6,182,212,0.08)'"
+          onmouseout="this.style.color='#4B5563';this.style.background='transparent'">MY TICKETS</a>
+        <a href="#book"
+          style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.625rem 1.25rem;background:#FEF600;color:#1F2937;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.875rem;border-radius:9999px;text-decoration:none;box-shadow:0 2px 8px rgba(254,246,0,0.35);transition:box-shadow 0.2s,transform 0.2s;"
+          onmouseover="this.style.boxShadow='0 4px 16px rgba(254,246,0,0.5)';this.style.transform='translateY(-1px)'"
+          onmouseout="this.style.boxShadow='0 2px 8px rgba(254,246,0,0.35)';this.style.transform='translateY(0)'">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
+            stroke="none" style="color:#dc2626;">
+            <path
+              d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
+          </svg>
+          BOOK TICKETS
+        </a>
+      </nav>
+
+      <button id="mobile-menu-toggle" aria-label="Toggle Menu"
+        style="display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;background:none;border:none;cursor:pointer;padding:8px;width:40px;height:40px;">
+        <span class="bar"
+          style="display:block;width:22px;height:2px;background:#374151;border-radius:2px;transition:all 0.3s ease;"></span>
+        <span class="bar"
+          style="display:block;width:22px;height:2px;background:#374151;border-radius:2px;transition:all 0.3s ease;"></span>
+        <span class="bar"
+          style="display:block;width:22px;height:2px;background:#374151;border-radius:2px;transition:all 0.3s ease;"></span>
+      </button>
+    </div>
+
+    <div id="mobile-menu"
+      style="display:none;flex-direction:column;padding:1rem 1.5rem 1.5rem;background:white;border-top:1px solid rgba(0,0,0,0.07);box-shadow:0 8px 24px rgba(0,0,0,0.08);gap:0.5rem;">
+      <a href="my-tickets.html"
+        style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.95rem;color:#374151;text-decoration:none;padding:0.875rem 1rem;border-radius:12px;transition:background 0.2s,color 0.2s;">MY
+        TICKETS</a>
+      <a href="#FAQ"
+        style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.95rem;color:#374151;text-decoration:none;padding:0.875rem 1rem;border-radius:12px;transition:background 0.2s,color 0.2s;">
+        FAQ</a>
+      <a href="mailto:kartikgadekar03@gmail.com"
+        style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.95rem;color:#374151;text-decoration:none;padding:0.875rem 1rem;border-radius:12px;transition:background 0.2s,color 0.2s;">
+        Contact</a>
+      <a href="#book" id="mobile-book-btn"
+        style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.875rem 1rem;background:#FEF600;color:#1F2937;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.95rem;border-radius:12px;text-decoration:none;margin-top:0.25rem;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
+          stroke="none" style="color:#dc2626;">
+          <path
+            d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
+        </svg>
+        BOOK TICKETS
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-eyebrow">
+      <span class="dot"></span>
+      <span class="date-top">24th MAY | Bansal Plaza, Bhopal</span>
+      <span class="dot"></span>
+    </div>
+    <h1 class="hero-title" style="font-size: clamp(3rem, 6vw, 4.5rem);">
+      <span class="hero-title-line reveal-up" style="--delay:0.15s">YOGA WITH PAWS</span>
+      <!-- <span class="hero-title-line reveal-up" style="--delay:0.15s">YWP</span> -->
+      <span class="hero-title-line hero-title-sub reveal-up" style="--delay:0.2s">90's Art Party</span>
+    </h1>
+    <a href="#book" class="cta-btn reveal-up" style="--delay:0.55s; margin-top: 2rem;">
+      <span>BOOK YOUR TICKETS NOW!!</span>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M4 10h12M10 4l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+    </a>
+    <div class="hero-desc"></div>
+  </section>
+
+  <!-- Carousel -->
+  <section class="carousel-section">
+    <div class="carousel-inner">
+      <div class="carousel-eyebrow">Event Highlights</div>
+      <h2 class="carousel-heading">What To Expect</h2>
+    </div>
+    <div class="carousel-viewport-wrap">
+      <div class="carousel-viewport" id="carousel-vp">
+        <div class="carousel-track" id="carousel-trk">
+          <div class="c-slide"><img src="./gullak.jpeg" alt="Gullak Painting" />
+            <div class="c-cap">
+              <div class="c-tag">Paint Your Own</div>
+              <h3>Gullak Painting</h3>
+            </div>
+          </div>
+          <div class="c-slide"><img src="./ogsnack.jpeg" alt="OG Snacks" />
+            <div class="c-cap">
+              <div class="c-tag">The OG</div>
+              <h3>The OG Snack bundle</h3>
+            </div>
+          </div>
+          <div class="c-slide"><img src="./games.webp" alt="90s Games" />
+            <div class="c-cap">
+              <div class="c-tag">90's Games</div>
+              <h3>Games and Mauj Masti</h3>
+            </div>
+          </div>
+          <div class="c-slide"><img src="./back.jpeg" alt="Dress Up" />
+            <div class="c-cap">
+              <div class="c-tag">Dress Up</div>
+              <h3>Back to childhood dress up</h3>
+            </div>
+          </div>
+          <div class="c-slide"><img src="./delicious.jpeg" alt="Snack Bar" />
+            <div class="c-cap">
+              <div class="c-tag">Snacks</div>
+              <h3>90's Snack Bar</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="carousel-nav">
+      <button class="c-arr-btn" id="c-prev" aria-label="Previous">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+      </button>
+      <div class="c-dots" id="c-dots"></div>
+      <button class="c-arr-btn" id="c-next" aria-label="Next">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M9 18l6-6-6-6" />
+        </svg>
+      </button>
+      <div class="c-counter" id="c-counter"></div>
+    </div>
+  </section>
+
+  <!-- ═══ Booking Form (single step) ═══ -->
+  <section class="booking-section" id="book">
+    <div class="section-label"></div>
+    <h2 class="section-title">Secure Your Spot</h2>
+
+    <div class="booking-layout">
+
+      <!-- ── Single unified form card ── -->
+      <div class="form-card single-form-card">
+
+        <!-- SECTION: Your Details -->
+        <div class="form-section">
+          <div class="form-section-title">Your Details</div>
+
+          <div class="field-group">
+            <label class="field-label" for="name">Full Name</label>
+            <div class="field-wrap">
+              <input type="text" id="name" class="field-input" placeholder="Pawse" autocomplete="name" />
+              <div class="field-border"></div>
+            </div>
+            <span class="field-error" id="name-err"></span>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="email">Email Address</label>
+            <div class="field-wrap">
+              <input type="email" id="email" class="field-input" placeholder="awh@gmail.com" autocomplete="email" />
+              <div class="field-border"></div>
+            </div>
+            <span class="field-error" id="email-err"></span>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="phone">Phone Number</label>
+            <div class="field-wrap phone-wrap">
+              <span class="phone-prefix">+91</span>
+              <input type="tel" id="phone" class="field-input phone-input" placeholder="7067XXXXXX" maxlength="10"
+                autocomplete="tel" />
+              <div class="field-border"></div>
+            </div>
+            <span class="field-error" id="phone-err"></span>
+          </div>
+
+          <div class="field-group" style="margin-top:1rem;display:flex;align-items:center;gap:0.5rem;">
+            <input type="checkbox" id="is-whatsapp" checked
+              style="width:1.2rem;height:1.2rem;accent-color:var(--primary);cursor:pointer;" />
+            <label for="is-whatsapp" style="font-size:0.9rem;cursor:pointer;">This mobile number is on WhatsApp</label>
+          </div>
+
+          <div class="field-group hidden" id="whatsapp-group" style="margin-top:1rem;">
+            <label class="field-label" for="whatsapp">WhatsApp Number (Optional)</label>
+            <div class="field-wrap phone-wrap">
+              <span class="phone-prefix">+91</span>
+              <input type="tel" id="whatsapp" class="field-input phone-input" placeholder="98765 43210"
+                maxlength="10" />
+              <div class="field-border"></div>
+            </div>
+            <span class="field-error" id="whatsapp-err"></span>
+          </div>
+        </div>
+
+        <!-- SECTION: Ticket Type -->
+        <div class="form-section">
+          <div class="form-section-title">Select Ticket Type</div>
+
+          <!-- Ticket type cards (populated by app.js from API) -->
+          <div id="ticket-types-loading"
+            style="text-align:center;padding:1rem 0;color:#9CA3AF;font-family:'Montserrat',sans-serif;font-size:0.85rem;">
+            Loading ticket options...
+          </div>
+          <div id="ticket-type-cards" style="display:none;display:flex;flex-direction:column;gap:0.75rem;"></div>
+          <!-- Fallback label shown when no types are configured in Firestore -->
+          <div id="ticket-type-fallback" style="display:none;">
+            <div class="qty-label-block">
+              <span class="qty-main-label">Entry Pass · ₹<span id="qty-unit-price">250</span> each</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION: Quantity — single counter, shown in both type-selection and fallback modes -->
+        <div class="form-section" id="qty-section" style="display:none;">
+          <div class="form-section-title">Number of Tickets</div>
+          <div class="qty-row">
+            <div class="qty-label-block">
+              <span class="qty-main-label" id="qty-type-label">Entry Pass</span>
+              <span class="qty-sub-label">Max 10 per booking</span>
+            </div>
+            <div class="qty-counter-wrap">
+              <button class="qty-btn" id="qty-minus" type="button" aria-label="Decrease">−</button>
+              <span class="qty-num" id="qty-value">1</span>
+              <button class="qty-btn" id="qty-plus" type="button" aria-label="Increase">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION: Coupon -->
+        <div class="form-section">
+          <div class="form-section-title">Coupon Code <span
+              style="font-weight:400;color:#CBD5E1;text-transform:none;letter-spacing:0;">(optional)</span></div>
+
+          <div class="coupon-input-row">
+            <div class="field-wrap" style="flex:1">
+              <input type="text" id="coupon-input" class="field-input coupon-field"
+                placeholder="Enter code e.g. NEXUS50" autocomplete="off" spellcheck="false" />
+              <div class="field-border"></div>
+            </div>
+            <button class="coupon-apply-btn" id="coupon-apply-btn">Apply</button>
+            <button class="coupon-remove-btn hidden" id="coupon-remove-btn">✕ Remove</button>
+          </div>
+          <div class="coupon-feedback hidden" id="coupon-feedback"></div>
+          <div class="coupon-applied hidden" id="coupon-applied">
+            <div class="coupon-applied-inner">
+              <span class="coupon-applied-icon">🎟️</span>
+              <div class="coupon-applied-text">
+                <strong id="coupon-applied-title">—</strong>
+                <span id="coupon-applied-desc">—</span>
+              </div>
+              <span class="coupon-applied-savings" id="coupon-applied-savings">−₹0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Price Summary -->
+        <div class="price-block">
+          <div class="price-row">
+            <span id="price-line-label">Entry Pass ×1</span>
+            <span id="price-original">₹250</span>
+          </div>
+          <div class="price-row discount-row hidden" id="discount-row">
+            <span id="discount-label">Discount</span>
+            <span class="discount-val" id="price-discount">−₹0</span>
+          </div>
+          <div class="bogo-row hidden" id="bogo-row">
+            <span class="bogo-badge">🎉 BOGO — 2 tickets for the price of 1!</span>
+          </div>
+          <div class="price-row muted" id="platform-fee-row">
+            <span>Platform fee </span>
+            <span id="price-platform-fee">₹0</span>
+          </div>
+          <div class="price-row muted" id="gst-row">
+            <span>Other fee</span>
+            <span id="price-gst">₹0</span>
+          </div>
+          <div class="price-row muted hidden" id="round-off-row">
+            <span>Round Off</span>
+            <span id="price-round-off">₹0</span>
+          </div>
+          <div class="price-divider"></div>
+          <div class="price-row total">
+            <span>Total</span>
+            <span id="price-total">₹250</span>
+          </div>
+        </div>
+
+        <div id="pay-error" class="pay-error hidden"></div>
+
+        <button class="pay-btn" id="pay-btn" style="width:100%;margin-top:1.5rem;">
+          <span id="pay-btn-text">Pay ₹250 Securely</span>
+          <div class="pay-spinner hidden" id="pay-spinner"></div>
+        </button>
+
+        <div class="razorpay-trust">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2L3 7v6c0 3.5 3 6.5 7 7.5C17 19.5 20 16.5 20 13V7l-7-5z" stroke="currentColor"
+              stroke-width="1.2" fill="none" />
+          </svg>
+          Secured by Razorpay · 256-bit SSL encryption
+        </div>
+      </div>
+
+      <!-- Event Info Sidebar -->
+      <aside class="event-info">
+        <div class="info-card">
+          <div class="info-card-label">EVENT</div>
+          <!-- <div class="info-card-title">90's Nostalgia <br>Art Party</div> -->
+          <div class="info-card-title">PAWSE <br>'26</div>
+          <div class="info-card-title">One Last Chapter </div>
+          <div class="info-card-title">Infinite Memories </div>
+          <div class="info-detail">
+            <span class="info-icon">📅</span>
+            <div>
+              <div class="info-detail-title">Date &amp; Time</div>
+              <div class="info-detail-val">24th MAY, 5:00 PM – 7:00 PM</div>
+            </div>
+          </div>
+          <div class="info-detail">
+            <span class="info-icon">📍</span>
+            <div>
+              <div class="info-detail-title">Venue</div>
+              <a class="info-detail-val" href="https://maps.app.goo.gl/YdM7LRjeYphtX3Zo6"
+                style="text-decoration:none;color:white;" target="_blank">Bansal Plaza, Bhopal</a>
+            </div>
+          </div>
+          <div class="info-detail">
+            <span class="info-icon">🎟️</span>
+            <div>
+              <div class="info-detail-title">Pass Type</div>
+              <div class="info-detail-val">Single Entry</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card perks-card">
+          <div class="info-card-label">INCLUDED</div>
+          <ul class="perks-list">
+            <li class="perk-item"><span class="perk-check">✓</span>Gullak and Painting Materials</li>
+            <li class="perk-item"><span class="perk-check">✓</span>Take your masterpiece home</li>
+            <li class="perk-item"><span class="perk-check">✓</span>The OG Snacks of 90's</li>
+            <li class="perk-item"><span class="perk-check">✓</span>All proceeds to animal rescue</li>
+            <li class="perk-item"><span class="perk-check">✓</span>TICKET</li>
+
+          </ul>
+        </div>
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="FAQ" class="faq-section">
+    <div class="section-label"></div>
+    <h2 class="section-title">Common Questions</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q">How do I get my ticket after payment? <span class="faq-arrow">↓</span></button>
+        <div class="faq-a">You'll be redirected to a ticket page immediately after payment. Your ticket with QR code
+          will also be accessible anytime via the link sent to you.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Can I transfer my ticket to someone else? <span class="faq-arrow">↓</span></button>
+        <div class="faq-a">Tickets are non-transferable. Each ticket is linked to the registrant's phone
+          number.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What is the refund policy? <span class="faq-arrow">↓</span></button>
+        <div class="faq-a">Refunds are available up to 7 days before the event. Contact us at kartikgadekar03@gmail.com
+          for
+          refund requests.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">PAWSE</div>
+      <div class="footer-links">
+        <div class="contact-group">
+          <a href="mailto:team@awhbharat.org" id="contact">Contact</a>
+          <!-- <a href="/contact-us.html">Contact Us</a>
+          <a href="/terms-and-conditions.html">Terms &amp; Conditions</a>
+          <a href="/privacy-policy.html">Privacy Policy</a>
+          <a href="/refund-policy.html">Cancellation / Refund Policy</a> -->
+        </div>
+      </div>
+      <div class="footer-copy">© 2026 Animals With Humanity. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>

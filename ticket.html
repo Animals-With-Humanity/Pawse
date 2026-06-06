@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Ticket — PAWSE 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;700&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="ticket-page">
+
+  <div class="bg-grid"></div>
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <!-- Loading State -->
+  <div class="page-loader" id="page-loader">
+    <div class="loader-ring"></div>
+    <p class="loader-text">Fetching your ticket...</p>
+  </div>
+
+  <!-- Success Confetti -->
+  <canvas class="confetti-canvas" id="confetti-canvas"></canvas>
+
+
+  <header style="
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+">
+
+    <div style="
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+  ">
+      <!-- Logo -->
+      <a href="#" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
+        <img src="./logo.png" alt="AWH Logo" style="height: 40px; width: 40px; object-fit: contain;" />
+        <div style="display: flex; flex-direction: column;">
+          <span style="
+          font-family: 'Montserrat', sans-serif;
+          font-size: 1.1rem;
+          font-weight: 800;
+          color: #111827;
+          line-height: 1;
+        ">PAWSE</span>
+          <span style="
+          font-family: 'Montserrat', sans-serif;
+          font-size: 0.6rem;
+          font-weight: 700;
+          color: #06b6d4;
+          text-transform: uppercase;
+          letter-spacing: 0.15em;
+          margin-top: 3px;
+        ">Animals With Humanity</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav id="desktop-nav" style="display: flex; align-items: center; gap: 0.75rem;">
+        <a href="my-tickets.html" style="
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: #4B5563;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        transition: color 0.2s, background 0.2s;
+      " onmouseover="this.style.color='#06b6d4'; this.style.background='rgba(6,182,212,0.08)'"
+          onmouseout="this.style.color='#4B5563'; this.style.background='transparent'">MY TICKETS</a>
+
+        <a href="index.html#book" style="
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        background: #FEF600;
+        color: #1F2937;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 0.875rem;
+        border-radius: 9999px;
+        text-decoration: none;
+        box-shadow: 0 2px 8px rgba(254,246,0,0.35);
+        transition: box-shadow 0.2s, transform 0.2s;
+      " onmouseover="this.style.boxShadow='0 4px 16px rgba(254,246,0,0.5)'; this.style.transform='translateY(-1px)'"
+          onmouseout="this.style.boxShadow='0 2px 8px rgba(254,246,0,0.35)'; this.style.transform='translateY(0)'">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
+            stroke="none" aria-hidden="true" style="color: #dc2626;">
+            <path
+              d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
+          </svg>
+          BOOK TICKETS
+        </a>
+      </nav>
+
+      <!-- Mobile Hamburger -->
+      <button id="mobile-menu-toggle" aria-label="Toggle Menu" style="
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      width: 40px;
+      height: 40px;
+    ">
+        <span class="bar"
+          style="display: block; width: 22px; height: 2px; background: #374151; border-radius: 2px; transition: all 0.3s ease;"></span>
+        <span class="bar"
+          style="display: block; width: 22px; height: 2px; background: #374151; border-radius: 2px; transition: all 0.3s ease;"></span>
+        <span class="bar"
+          style="display: block; width: 22px; height: 2px; background: #374151; border-radius: 2px; transition: all 0.3s ease;"></span>
+      </button>
+    </div>
+
+    <!-- Mobile Dropdown Panel -->
+    <div id="mobile-menu" style="
+    display: none;
+    flex-direction: column;
+    padding: 1rem 1.5rem 1.5rem;
+    background: white;
+    border-top: 1px solid rgba(0,0,0,0.07);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    gap: 0.5rem;
+  ">
+
+      <a href="my-tickets.html" style="
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #374151;
+      text-decoration: none;
+      padding: 0.875rem 1rem;
+      border-radius: 12px;
+      transition: background 0.2s, color 0.2s;
+    " onmouseover="this.style.background='rgba(6,182,212,0.08)'; this.style.color='#06b6d4'"
+        onmouseout="this.style.background='transparent'; this.style.color='#374151'">MY TICKETS</a>
+
+      <a href="index.html#FAQ"
+        style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.95rem;color:#374151;text-decoration:none;padding:0.875rem 1rem;border-radius:12px;transition:background 0.2s,color 0.2s;">
+        FAQ</a>
+      <a href="mailto:team@awhbharat.org"
+        style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.95rem;color:#374151;text-decoration:none;padding:0.875rem 1rem;border-radius:12px;transition:background 0.2s,color 0.2s;">
+        Contact</a>
+      <a href="index.html#book" id="mobile-book-btn" style="
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1rem;
+      background: #FEF600;
+      color: #1F2937;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border-radius: 12px;
+      text-decoration: none;
+      margin-top: 0.25rem;
+    ">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
+          stroke="none" aria-hidden="true" style="color: #dc2626;">
+          <path
+            d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
+        </svg>
+        BOOK TICKETS
+      </a>
+    </div>
+  </header>
+
+  <main class="ticket-main" id="ticket-main" style="display:none">
+
+    <!-- Success Banner -->
+    <div class="success-banner" id="success-banner">
+      <div class="success-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="15" stroke="currentColor" stroke-width="1.5" />
+          <path d="M9 16l5 5 9-9" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+      <div class="success-text">
+        <strong>Payment Confirmed!</strong>
+        <span>Your ticket has been generated and is ready for use.</span>
+      </div>
+    </div>
+
+    <!-- Dynamic Tickets Container -->
+    <div class="tickets-container" id="tickets-container">
+      <!-- Ticket cards are dynamically generated by ticket.js -->
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="ticket-actions">
+      <button class="ticket-action-btn primary-action" id="download-btn">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+          <path d="M10 3v10M5 9l5 5 5-5M3 17h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+        Download All Tickets
+      </button>
+      <button class="ticket-action-btn" id="share-btn">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+          <circle cx="15" cy="4" r="2" stroke="currentColor" stroke-width="1.3" />
+          <circle cx="15" cy="16" r="2" stroke="currentColor" stroke-width="1.3" />
+          <circle cx="5" cy="10" r="2" stroke="currentColor" stroke-width="1.3" />
+          <path d="M13 5.5l-6 3M13 14.5l-6-3" stroke="currentColor" stroke-width="1.3" />
+        </svg>
+        Share Link
+      </button>
+    </div>
+
+    <!-- What to expect -->
+    <div class="next-steps">
+      <div class="section-label">// NEXT STEPS</div>
+      <div class="steps-grid">
+        <div class="next-step-card">
+          <div class="next-step-num">01</div>
+          <div class="next-step-title">Save this page</div>
+          <div class="next-step-desc">Bookmark this URL or download your tickets. You'll need them at the entrance.
+          </div>
+        </div>
+        <div class="next-step-card">
+          <div class="next-step-num">02</div>
+          <div class="next-step-title">Arrive on time</div>
+          <div class="next-step-desc">When Doors open , Each person needs their own QR code to enter.</div>
+        </div>
+        <div class="next-step-card">
+          <div class="next-step-num">03</div>
+          <div class="next-step-title">Scan &amp; Enter</div>
+          <div class="next-step-desc">Each ticket has a unique QR code. Show it at the gate for individual entry.</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Error State -->
+  <div class="ticket-error-state hidden" id="ticket-error">
+    <div class="error-icon">⚠️</div>
+    <h2>Ticket Not Found</h2>
+    <p>We couldn't find this ticket. Check your link or contact support.</p>
+    <a href="index.html" class="cta-btn" style="display:inline-flex;margin-top:2rem">← Book a Ticket</a>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="config.js"></script>
+  <script src="ticket.js"></script>
+</body>
+
+</html>
