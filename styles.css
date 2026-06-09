@@ -1412,23 +1412,28 @@ p.desc {
 }
 
 .info-card-label {
-  font-family: var(--font-mono);
-  */
-  /* font-family: Outfit, sans-serif; */
-  /* font-size: 0rem; */
+
   color: var(--accent);
   /* letter-spacing: 0.1em; */
   margin-bottom: 0.5rem;
 }
 
 .info-card-title {
-  font-family: var(--font-display);
-  */ font-size: 1.75rem;
-  /* font-family: Outfit, sans-serif; */
   color: var(--text-muted);
+  font-size: 2rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin-bottom: 0.2rem;
+}
+
+.alternate {
+  padding-top: 0rem;
+  position: relative;
+  top: -2rem;
+}
+
+.choose {
+  padding-top: 2rem;
 }
 
 .info-detail {
