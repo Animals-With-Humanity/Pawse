@@ -1590,6 +1590,13 @@ p.desc {
   /* Keeps Privacy/Terms aligned with the top of 'Contact' */
 }
 
+@media (max-width: 768px) {
+  .footer-inner div {
+    flex: 1 1 100%;
+    /* Full width on mobile */
+  }
+}
+
 /* Container to stack label and email */
 .contact-group {
   display: flex;
