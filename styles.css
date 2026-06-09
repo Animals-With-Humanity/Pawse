@@ -687,7 +687,7 @@ nav.header-nav {
   font-family: 'Montserrat,sans-serif';
   font-size: 0.7rem;
   letter-spacing: 0.14em;
-  color: var(--text);
+  /* color: var(--text); */
   text-transform: uppercase;
   margin-bottom: 0.5rem;
 }
@@ -697,12 +697,12 @@ nav.header-nav {
   font-size: clamp(2.8rem, 6vw, 5rem);
   letter-spacing: 0.06em;
   line-height: 1;
-  color: var(--text);
+  /* color: var(--text); */
   margin-bottom: 0.3rem;
 }
 
 .carousel-heading span {
-  color: var(--accent);
+  /* color: var(--accent); */
 }
 
 .carousel-sub {
@@ -733,7 +733,7 @@ nav.header-nav {
   border-radius: 14px;
   overflow: hidden;
   position: relative;
-  background: var(--surface-2);
+  background: black;
   height: 288px;
 }
 
@@ -751,7 +751,7 @@ nav.header-nav {
   left: 0;
   right: 0;
   padding: 2.5rem 1rem 1rem;
-  background: linear-gradient(to top, rgba(2, 60, 180, 0.92) 0%, transparent 100%);
+  background: linear-gradient(to top, rgb(0, 0, 0) 0%, transparent 100%);
   text-align: left;
 }
 
@@ -767,7 +767,7 @@ nav.header-nav {
 .c-cap h3 {
   font-family: var(--font-display);
   font-size: 2.35rem;
-  color: var(--text);
+  color: pink;
   letter-spacing: 0.05em;
   line-height: 1.1;
 }
@@ -1524,7 +1524,7 @@ p.desc {
   background: none;
   border: none;
   color: var(--text);
-  font-family: var(--font-body);
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.95rem;
   cursor: pointer;
   transition: color 0.2s;
@@ -1546,7 +1546,8 @@ p.desc {
 .faq-a {
   display: none;
   font-size: 0.88rem;
-  color: var(--text-muted);
+  color: var(--text);
+  font-family: 'Montserrat', sans-serif;
   padding-bottom: 1.25rem;
   line-height: 1.7;
 }
@@ -2124,6 +2125,7 @@ p.desc {
 .stat-val {
   font-family: var(--font-display);
   font-size: 2.5rem;
+  color: var(--text);
   letter-spacing: 0.04em;
   line-height: 1;
   margin-bottom: 0.3rem;
@@ -2662,6 +2664,7 @@ p.desc {
   background: rgba(255, 77, 77, 0.08);
   /* color: var(--red); */
   border: 1px solid rgba(255, 77, 77, 0.2);
+  color: var(--text);
 }
 
 .coupon-feedback.success {
