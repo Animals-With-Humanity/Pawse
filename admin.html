@@ -87,6 +87,7 @@
         <button class="admin-tab" data-panel="panel-ticket-types">🎟️ Ticket Types</button>
         <button class="admin-tab" data-panel="panel-coupons">🏷️ Coupon Manager</button>
         <button class="admin-tab" data-panel="panel-attendees">📋 Attendees</button>
+        <button class="admin-tab" data-panel="panel-event-settings">⚙️ Event Settings</button>
       </div>
 
       <!-- ════ TAB: Gate Verification ════ -->
@@ -208,8 +209,8 @@
             <div class="field-group">
               <label class="field-label">Total Capacity</label>
               <div class="field-wrap">
-                <input type="number" id="tt-capacity" class="field-input"
-                  placeholder="Leave blank for unlimited" min="1" />
+                <input type="number" id="tt-capacity" class="field-input" placeholder="Leave blank for unlimited"
+                  min="1" />
                 <div class="field-border"></div>
               </div>
             </div>
@@ -217,8 +218,7 @@
             <div class="field-group">
               <label class="field-label">Sort Order</label>
               <div class="field-wrap">
-                <input type="number" id="tt-order" class="field-input"
-                  placeholder="0 = first (default)" min="0" />
+                <input type="number" id="tt-order" class="field-input" placeholder="0 = first (default)" min="0" />
                 <div class="field-border"></div>
               </div>
             </div>
@@ -259,7 +259,9 @@
                 </tr>
               </thead>
               <tbody id="tt-tbody">
-                <tr><td colspan="7" class="table-loading">Loading ticket types...</td></tr>
+                <tr>
+                  <td colspan="7" class="table-loading">Loading ticket types...</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -341,6 +343,16 @@
                 <div class="field-border"></div>
               </div>
             </div>
+            <div class="field-group" style="grid-column:1/-1">
+              <label class="field-label">Restrict to Ticket Types</label>
+              <div id="cc-ticket-type-checkboxes"
+                style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.4rem;min-height:2rem">
+                <span style="font-size:0.78rem;color:var(--text-muted)">Loading ticket types...</span>
+              </div>
+              <span style="font-size:0.7rem;color:#9CA3AF;margin-top:0.25rem;display:block">
+                Leave all unchecked to allow for <strong>all ticket types</strong>.
+              </span>
+            </div>
 
           </div>
 
@@ -365,13 +377,14 @@
                   <th>Used / Max</th>
                   <th>Expires</th>
                   <th>Description</th>
+                  <th>Ticket Types</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody id="coupon-tbody">
                 <tr>
-                  <td colspan="8" class="table-loading">Loading coupons...</td>
+                  <td colspan="9" class="table-loading">Loading coupons...</td>
                 </tr>
               </tbody>
             </table>
@@ -409,6 +422,72 @@
             </table>
           </div>
         </div>
+      </div>
+
+      <!-- ════ TAB: Event Settings ════ -->
+      <div class="admin-tab-panel" id="panel-event-settings">
+
+        <!-- Event Active Toggle -->
+        <div class="create-coupon-form" id="event-active-section">
+          <h3>🔒 Event Booking Status</h3>
+          <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1.25rem">
+            When set to <strong>Inactive</strong>, all new ticket purchases for this event will be blocked immediately.
+            Existing tickets are not affected.
+          </p>
+          <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+            <div id="event-active-status" style="font-size:0.95rem;font-weight:600">Loading...</div>
+            <button class="create-submit-btn" id="toggle-event-active-btn" style="min-width:160px">Loading...</button>
+          </div>
+        </div>
+
+        <!-- Platform Fee Config -->
+        <div class="create-coupon-form" style="margin-top:1.5rem">
+          <h3>💳 Platform Fee Configuration</h3>
+          <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1.25rem">
+            Set the flat platform fee (in ₹) charged per booking and the GST percentage applied on that fee.
+            Set both to <strong>0</strong> to charge no platform fee.
+          </p>
+          <div class="form-grid">
+
+            <div class="field-group" style="grid-column:1/-1">
+              <label class="field-label">Fee Type</label>
+              <div class="type-selector" style="margin-top:0.4rem">
+                <input type="radio" name="es-fee-type" id="es-fee-flat" value="flat" class="type-radio" checked />
+                <label for="es-fee-flat" class="type-label">₹ Fixed Amount</label>
+                <input type="radio" name="es-fee-type" id="es-fee-percent" value="percent" class="type-radio" />
+                <label for="es-fee-percent" class="type-label">% of Order Total</label>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" id="es-fee-label">Platform Fee (₹)</label>
+              <div class="field-wrap">
+                <input type="number" id="es-platform-fee" class="field-input" placeholder="e.g. 3" min="0"
+                  step="0.01" />
+                <div class="field-border"></div>
+              </div>
+              <span id="es-fee-hint" style="font-size:0.7rem;color:#9CA3AF">Fixed ₹ amount added to every paid booking.
+                Enter 0 for no fee.</span>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">GST on Platform Fee (%)</label>
+              <div class="field-wrap">
+                <input type="number" id="es-gst-percent" class="field-input" placeholder="e.g. 18" min="0" max="100"
+                  step="0.01" />
+                <div class="field-border"></div>
+              </div>
+              <span style="font-size:0.7rem;color:#9CA3AF">GST percentage applied on the platform fee only. Enter 0 for
+                no GST.</span>
+            </div>
+
+          </div>
+          <div class="create-form-actions" style="margin-top:1rem">
+            <button class="create-submit-btn" id="save-event-config-btn">💾 Save Fee Config</button>
+          </div>
+          <div id="es-preview" style="margin-top:1rem;font-size:0.82rem;color:var(--text-muted)"></div>
+        </div>
+
       </div>
 
     </main>

@@ -14,9 +14,9 @@ const CONFIG = {
   // Event details
   EVENT_ID: "YWP",
   EVENT_NAME: "Yoga Wtih Paws ",
-  EVENT_DATE: "12th May 2026",
-  EVENT_VENUE: "Amante, Rohit Nagar",
+  EVENT_DATE: "21st June 2026",
+  EVENT_VENUE: "Jammin Studio, Bhopal",
 
   // Ticket price in INR
-  TICKET_PRICE: 600,
+  TICKET_PRICE: 350,
 };

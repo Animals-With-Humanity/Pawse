@@ -18,6 +18,11 @@
     rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Baloo+2:wght@400;700&display=swap"
     rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cedarville+Cursive&family=Edu+NSW+ACT+Cursive:wght@400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Ole&family=Playwrite+AU+VIC+Guides&family=Playwrite+GB+J:ital,wght@1,100..400&family=Rock+Salt&display=swap"
+    rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
   <style>
@@ -41,7 +46,7 @@
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: #9CA3AF;
+      color: #5A4A52;
       margin-bottom: 1.25rem;
       padding-bottom: 0.5rem;
       border-bottom: 1px solid rgba(0, 0, 0, 0.06);
@@ -75,6 +80,20 @@
       user-select: none;
     }
 
+    .hero-with {
+      display: block;
+
+      font-size: clamp(2rem, 6vw, 8.5rem);
+      font-weight: 700;
+      /* letter-spacing: 0.25em; */
+      color: var(--text);
+      margin: 1.4rem 0;
+      /* margin-bottom: 2.9rem; */
+      font-family: "Edu NSW ACT Cursive", cursive;
+      font-optical-sizing: auto;
+      font-style: normal;
+    }
+
     .qty-counter-wrap .qty-btn:hover {
       border-color: var(--accent);
       color: var(--accent);
@@ -92,6 +111,7 @@
       font-size: 1rem;
       font-weight: 700;
 
+      color: var(--text);
       border-left: 1px solid rgba(0, 0, 0, 0.1);
       border-right: 1px solid rgba(0, 0, 0, 0.1);
     }
@@ -109,10 +129,10 @@
     }
 
     .qty-main-label {
-      font-family: 'Montserrat', sans-serif;
+      /* font-family: 'Montserrat', sans-serif;
       font-size: 0.875rem;
-      font-weight: 600;
-
+      font-weight: 600; */
+      color: var(--text)
     }
 
     .qty-sub-label {
@@ -261,27 +281,104 @@
       padding: 2px 7px;
       border-radius: 9999px;
     }
+
+    .instructor-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+
+      .section-label {
+        color: var(--text);
+        font-size: 2rem;
+      }
+    }
+
+    .instructor-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 0;
+    }
+
+    .instructor-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .instructor-content {
+      padding: 3rem;
+    }
+
+    .instructor-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .instructor-role {
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.85rem;
+    }
+
+    .instructor-content p {
+      color: var(--text-muted);
+      line-height: 1.9;
+      margin-bottom: 1rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+    }
+
+    @media(max-width:768px) {
+
+      .instructor-card {
+        grid-template-columns: 1fr;
+      }
+
+      .instructor-image {
+        height: 350px;
+      }
+
+      .instructor-content {
+        padding: 2rem;
+      }
+
+      .instructor-name {
+        font-size: 1.6rem;
+      }
+    }
   </style>
 </head>
 
 <body>
 
   <!-- Ambient background -->
-  <div class="bg-glow bg-glow-1"></div>
+  <!-- <div class="bg-glow bg-glow-1"></div>
   <div class="bg-glow bg-glow-2"></div>
-  <div class="bg-glow bg-glow-3"></div>
+  <div class="bg-glow bg-glow-3"></div> -->
 
   <!-- Floating Shapes -->
-  <div class="floating-shape shape-1"></div>
+  <!-- <div class="floating-shape shape-1"></div>
   <div class="floating-shape shape-2"></div>
   <div class="floating-shape shape-3"></div>
   <div class="floating-shape shape-4"></div>
-  <div class="floating-shape shape-5"></div>
+  <div class="floating-shape shape-5"></div> -->
 
   <!-- Header -->
   <header style="
     position: fixed; top: 0; left: 0; width: 100%; z-index: 50;
-    background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+    background:white; backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(0,0,0,0.08);
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
@@ -293,26 +390,23 @@
         <img src="./logo.png" alt="AWH Logo" style="height: 40px; width: 40px; object-fit: contain;" />
         <div style="display: flex; flex-direction: column;">
           <span
-            style="font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:800;color:#111827;line-height:1;">PAWSE
+            style="font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:800;color:black;line-height:1;">PAWSE
           </span>
 
           <span
-            style="font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;color:#06b6d4;text-transform:uppercase;letter-spacing:0.15em;margin-top:3px;">Animals
+            style="font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;color:#5A4A52;text-transform:uppercase;letter-spacing:0.15em;margin-top:3px;">Animals
             With Humanity</span>
         </div>
       </a>
 
       <nav id="desktop-nav" style="display: flex; align-items: center; gap: 0.75rem;">
         <a href="my-tickets.html"
-          style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.875rem;color:#4B5563;text-decoration:none;padding:0.5rem 1rem;border-radius:9999px;transition:color 0.2s,background 0.2s;"
-          onmouseover="this.style.color='#06b6d4';this.style.background='rgba(6,182,212,0.08)'"
-          onmouseout="this.style.color='#4B5563';this.style.background='transparent'">MY TICKETS</a>
+          style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.875rem;color:rgb(75, 85, 99);text-decoration:none;padding:0.5rem 1rem;border-radius:9999px;transition:color 0.2s,background 0.2s;">MY
+          TICKETS</a>
         <a href="#book"
-          style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.625rem 1.25rem;background:#FEF600;color:#1F2937;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.875rem;border-radius:9999px;text-decoration:none;box-shadow:0 2px 8px rgba(254,246,0,0.35);transition:box-shadow 0.2s,transform 0.2s;"
-          onmouseover="this.style.boxShadow='0 4px 16px rgba(254,246,0,0.5)';this.style.transform='translateY(-1px)'"
-          onmouseout="this.style.boxShadow='0 2px 8px rgba(254,246,0,0.35)';this.style.transform='translateY(0)'">
+          style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.625rem 1.25rem;background:rgb(217, 143, 174);color:rgb(255, 255, 255);font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.875rem;border-radius:9999px;text-decoration:none;transition:box-shadow 0.2s,transform 0.2s;">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
-            stroke="none" style="color:#dc2626;">
+            stroke="none" style="color:white;">
             <path
               d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
           </svg>
@@ -358,13 +452,20 @@
   <section class="hero">
     <div class="hero-eyebrow">
       <span class="dot"></span>
-      <span class="date-top">24th MAY | Bansal Plaza, Bhopal</span>
+      <span class="date-top">21st JUNE | Studio Jammin, Bhopal</span>
       <span class="dot"></span>
     </div>
     <h1 class="hero-title" style="font-size: clamp(3rem, 6vw, 4.5rem);">
-      <span class="hero-title-line reveal-up" style="--delay:0.15s">YOGA WITH PAWS</span>
+      <!-- <span class="hero-title-line reveal-up" style="--delay:0.15s">YOGA WITH PAWS</span> -->
+      <span class="hero-title-line reveal-up" style="--delay:0.1s">YOGA</span>
+
+      <span class="hero-with reveal-up" style="--delay:0.2s">
+        with
+      </span>
+
+      <span class="hero-title-line reveal-up" style="--delay:0.3s">PUPPIES</span>
       <!-- <span class="hero-title-line reveal-up" style="--delay:0.15s">YWP</span> -->
-      <span class="hero-title-line hero-title-sub reveal-up" style="--delay:0.2s">90's Art Party</span>
+      <!-- <span class="hero-title-line hero-title-sub reveal-up" style="--delay:0.2s">90's Art Party</span> -->
     </h1>
     <a href="#book" class="cta-btn reveal-up" style="--delay:0.55s; margin-top: 2rem;">
       <span>BOOK YOUR TICKETS NOW!!</span>
@@ -385,34 +486,34 @@
     <div class="carousel-viewport-wrap">
       <div class="carousel-viewport" id="carousel-vp">
         <div class="carousel-track" id="carousel-trk">
-          <div class="c-slide"><img src="./gullak.jpeg" alt="Gullak Painting" />
+          <div class="c-slide"><img src="./soothin_session.jpg" alt="Gullak Painting" />
             <div class="c-cap">
-              <div class="c-tag">Paint Your Own</div>
-              <h3>Gullak Painting</h3>
+              <div class="c-tag">YOGA</div>
+              <h3>Soothing Yoga Session</h3>
             </div>
           </div>
-          <div class="c-slide"><img src="./ogsnack.jpeg" alt="OG Snacks" />
+          <div class="c-slide"><img src="./puppy_cuddles.JPEG" alt="OG Snacks" />
             <div class="c-cap">
-              <div class="c-tag">The OG</div>
-              <h3>The OG Snack bundle</h3>
+              <div class="c-tag">PUPPIES</div>
+              <h3>Unlimited Puppy Cuddles</h3>
             </div>
           </div>
-          <div class="c-slide"><img src="./games.webp" alt="90s Games" />
+          <div class="c-slide"><img src="./adopt_companion.jpg" alt="90s Games" />
             <div class="c-cap">
-              <div class="c-tag">90's Games</div>
-              <h3>Games and Mauj Masti</h3>
+              <div class="c-tag">ADOPT</div>
+              <h3>Adopt a Paw Friend</h3>
             </div>
           </div>
-          <div class="c-slide"><img src="./back.jpeg" alt="Dress Up" />
+          <div class="c-slide"><img src="./art_therapy.PNG" alt="Dress Up" />
             <div class="c-cap">
-              <div class="c-tag">Dress Up</div>
-              <h3>Back to childhood dress up</h3>
+              <div class="c-tag">MORE</div>
+              <h3>Followed by Art Therapy</h3>
             </div>
           </div>
-          <div class="c-slide"><img src="./delicious.jpeg" alt="Snack Bar" />
+          <div class="c-slide"><img src="./animal_support.jpeg" alt="Snack Bar" />
             <div class="c-cap">
-              <div class="c-tag">Snacks</div>
-              <h3>90's Snack Bar</h3>
+              <div class="c-tag">SUPPORT</div>
+              <h3>Proceeds support Animal Rescue</h3>
             </div>
           </div>
         </div>
@@ -433,7 +534,47 @@
       <div class="c-counter" id="c-counter"></div>
     </div>
   </section>
+  <section class="instructor-section">
+    <!-- <div class="section-label">Meet Puneeta</div> -->
+    <h2 class="section-title">Your Paw-sitive Guru for Yoga with puppies</h2>
 
+    <div class="instructor-card">
+
+      <div class="instructor-image">
+        <img src="./yoga_guru.PNG" alt="Yoga Instructor">
+      </div>
+
+      <div class="instructor-content">
+        <div class="instructor-name">
+          Meet Puneeta
+        </div>
+
+        <!-- <div class="instructor-role">
+          Certified Yoga Instructor
+        </div> -->
+
+        <p>
+          Puneeta, an ISB graduate and engineer, has been embracing the art of yoga for a decade. Driven by a passion to
+          cultivate a healthier, calmer, and kinder world, she has dedicated the past 5 years to teaching meditative
+          yoga.
+
+        </p>
+
+        <p>
+          As a loving pet parent to three indie dogs, Puneeta has discovered true joy and peace in their companionship.
+          Rescuing a stranded puppy in the rains, and eventually keeping her forever, not only expanded her family but
+          also brought profound peace and happiness into her home.
+        </p>
+        <p>
+          Join Puneeta at our upcoming Yoga with puppies workshop, where her experience from previous sessions has shown
+          that the presence of playful puppies elevates the yoga practice, helping participants connect deeply with
+          their inner child and soul. This unique blend of serenity and joy promises a deeply meaningful experience for
+          all.
+        </p>
+      </div>
+
+    </div>
+  </section>
   <!-- ═══ Booking Form (single step) ═══ -->
   <section class="booking-section" id="book">
     <div class="section-label"></div>
@@ -480,7 +621,8 @@
           <div class="field-group" style="margin-top:1rem;display:flex;align-items:center;gap:0.5rem;">
             <input type="checkbox" id="is-whatsapp" checked
               style="width:1.2rem;height:1.2rem;accent-color:var(--primary);cursor:pointer;" />
-            <label for="is-whatsapp" style="font-size:0.9rem;cursor:pointer;">This mobile number is on WhatsApp</label>
+            <label for="is-whatsapp" style="cursor:pointer;color:var(--text)">This mobile number is on
+              WhatsApp</label>
           </div>
 
           <div class="field-group hidden" id="whatsapp-group" style="margin-top:1rem;">
@@ -492,6 +634,23 @@
               <div class="field-border"></div>
             </div>
             <span class="field-error" id="whatsapp-err"></span>
+          </div>
+          <div class="field-group" style="margin-top:1rem;">
+            <label class="field-label">Do you need a Yoga Mat?</label>
+
+            <div style="display:flex;gap:1rem;margin-top:0.5rem;">
+              <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;color: var(--text);">
+                <input type="radio" name="needYogaMat" value="yes" />
+                Yes
+              </label>
+
+              <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;color: var(--text);">
+                <input type="radio" name="needYogaMat" value="no" checked />
+                No
+              </label>
+            </div>
+
+            <span class="field-error" id="yoga-mat-err"></span>
           </div>
         </div>
 
@@ -532,7 +691,7 @@
         <!-- SECTION: Coupon -->
         <div class="form-section">
           <div class="form-section-title">Coupon Code <span
-              style="font-weight:400;color:#CBD5E1;text-transform:none;letter-spacing:0;">(optional)</span></div>
+              style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></div>
 
           <div class="coupon-input-row">
             <div class="field-wrap" style="flex:1">
@@ -570,11 +729,11 @@
             <span class="bogo-badge">🎉 BOGO — 2 tickets for the price of 1!</span>
           </div>
           <div class="price-row muted" id="platform-fee-row">
-            <span>Platform fee </span>
+            <span>Platform fee (2%) </span>
             <span id="price-platform-fee">₹0</span>
           </div>
           <div class="price-row muted" id="gst-row">
-            <span>Other fee</span>
+            <span>GST (18%) </span>
             <span id="price-gst">₹0</span>
           </div>
           <div class="price-row muted hidden" id="round-off-row">
@@ -608,23 +767,24 @@
       <aside class="event-info">
         <div class="info-card">
           <div class="info-card-label">EVENT</div>
-          <!-- <div class="info-card-title">90's Nostalgia <br>Art Party</div> -->
-          <div class="info-card-title">PAWSE <br>'26</div>
+          <div class="info-card-title">YOGA WITH <br>PUPPIES</div>
+          <!-- <div class="info-card-title">PAWSE <br>'26</div>
           <div class="info-card-title">One Last Chapter </div>
-          <div class="info-card-title">Infinite Memories </div>
+          <div class="info-card-title">Infinite Memories </div> -->
+
           <div class="info-detail">
             <span class="info-icon">📅</span>
             <div>
               <div class="info-detail-title">Date &amp; Time</div>
-              <div class="info-detail-val">24th MAY, 5:00 PM – 7:00 PM</div>
+              <div class="info-detail-val">21st JUNE, 7:00 AM – 8:30 AM</div>
             </div>
           </div>
           <div class="info-detail">
             <span class="info-icon">📍</span>
             <div>
               <div class="info-detail-title">Venue</div>
-              <a class="info-detail-val" href="https://maps.app.goo.gl/YdM7LRjeYphtX3Zo6"
-                style="text-decoration:none;color:white;" target="_blank">Bansal Plaza, Bhopal</a>
+              <a class="info-detail-val" href="https://maps.app.goo.gl/YdM7LRjeYphtX3Zo6" style="text-decoration:none;"
+                target="_blank">Jammin Studio, Char Imili</a>
             </div>
           </div>
           <div class="info-detail">
@@ -639,9 +799,9 @@
         <div class="info-card perks-card">
           <div class="info-card-label">INCLUDED</div>
           <ul class="perks-list">
-            <li class="perk-item"><span class="perk-check">✓</span>Gullak and Painting Materials</li>
-            <li class="perk-item"><span class="perk-check">✓</span>Take your masterpiece home</li>
-            <li class="perk-item"><span class="perk-check">✓</span>The OG Snacks of 90's</li>
+            <li class="perk-item"><span class="perk-check">✓</span>Puppies available for adoption</li>
+            <!-- <li class="perk-item"><span class="perk-check">✓</span>Take your masterpiece home</li> -->
+            <!-- <li class="perk-item"><span class="perk-check">✓</span>The OG Snacks of 90's</li> -->
             <li class="perk-item"><span class="perk-check">✓</span>All proceeds to animal rescue</li>
             <li class="perk-item"><span class="perk-check">✓</span>TICKET</li>
 

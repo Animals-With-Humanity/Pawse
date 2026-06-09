@@ -54,6 +54,7 @@ function showDashboard() {
   loadAttendees();
   loadCoupons();
   loadTicketTypes();
+  loadEventSettings();
 }
 
 $("logout-btn").addEventListener("click", () => {
@@ -130,10 +131,10 @@ function startScanner() {
     { fps: 10, qrbox: { width: 200, height: 200 } },
     (decodedText) => {
       let tId = decodedText;
-      try { const dec = JSON.parse(atob(decodedText)); if (dec.t) tId = dec.t; } catch (_) {}
+      try { const dec = JSON.parse(atob(decodedText)); if (dec.t) tId = dec.t; } catch (_) { }
       verifyTicket(tId);
     },
-    () => {}
+    () => { }
   ).then(() => {
     scannerActive = true;
     $("toggle-scanner").textContent = "Stop Camera";
@@ -143,7 +144,7 @@ function startScanner() {
 
 function stopScanner() {
   if (html5QrCode && scannerActive) {
-    html5QrCode.stop().catch(() => {});
+    html5QrCode.stop().catch(() => { });
     scannerActive = false;
     $("toggle-scanner").textContent = "Start Camera";
     $("toggle-scanner").style.background = "";
@@ -174,7 +175,7 @@ async function verifyTicket(ticketId) {
 }
 
 function showResultState(state) {
-  ["result-idle","result-loading","result-valid","result-invalid"].forEach((id) => {
+  ["result-idle", "result-loading", "result-valid", "result-invalid"].forEach((id) => {
     $(id).classList.add("hidden");
   });
   if (state !== "none") $(`result-${state}`).classList.remove("hidden");
@@ -218,7 +219,7 @@ function playBeep(freq, duration, type) {
     gain.gain.setValueAtTime(0.3, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration / 1000);
     osc.start(ctx.currentTime); osc.stop(ctx.currentTime + duration / 1000);
-  } catch (_) {}
+  } catch (_) { }
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -226,6 +227,7 @@ function playBeep(freq, duration, type) {
 // ═══════════════════════════════════════════════════════════════════
 
 let editingTicketTypeId = null; // null = create mode; string = edit mode
+let cachedTicketTypes = [];
 
 async function loadTicketTypes() {
   try {
@@ -235,14 +237,18 @@ async function loadTicketTypes() {
     );
     const data = await res.json();
     if (res.ok) {
+      cachedTicketTypes = data.ticketTypes || [];
       renderTicketTypeTable(data.ticketTypes);
+      renderCouponTicketTypeCheckboxes(cachedTicketTypes);
     } else {
       // Backend may not have this route yet (e.g. production not deployed) — show empty state gracefully
       renderTicketTypeTable([]);
+      renderCouponTicketTypeCheckboxes([]);
     }
   } catch (err) {
     console.error("Failed to load ticket types", err);
     renderTicketTypeTable([]);
+    renderCouponTicketTypeCheckboxes([]);
   }
 }
 
@@ -271,8 +277,8 @@ function renderTicketTypeTable(types) {
       <td style="color:var(--text-muted);font-size:0.78rem;max-width:180px">${t.description || "—"}</td>
       <td>
         ${t.active
-          ? `<span class="active-pill">● Active</span>`
-          : `<span class="inactive-pill">○ Inactive</span>`}
+        ? `<span class="active-pill">● Active</span>`
+        : `<span class="inactive-pill">○ Inactive</span>`}
       </td>
       <td>
         <button class="coupon-action-btn" onclick="editTicketType('${t.id}')">Edit</button>
@@ -422,6 +428,29 @@ async function deleteTicketType(typeId, label) {
   }
 }
 
+function renderCouponTicketTypeCheckboxes(types, selectedIds = []) {
+  const container = $("cc-ticket-type-checkboxes");
+  if (!container) return;
+  if (!types || types.length === 0) {
+    container.innerHTML = `<span style="font-size:0.78rem;color:var(--text-muted)">No ticket types found for this event.</span>`;
+    return;
+  }
+  container.innerHTML = types.map((t) => `
+    <label style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.82rem;cursor:pointer;
+      background:var(--surface-2,rgba(255,255,255,0.04));border:1px solid var(--border,rgba(255,255,255,0.1));
+      border-radius:8px;padding:0.35rem 0.7rem;user-select:none">
+      <input type="checkbox" name="cc-ticket-type" value="${t.id}"
+        ${selectedIds.includes(t.id) ? "checked" : ""}
+        style="accent-color:var(--accent,#e8ff47);width:14px;height:14px" />
+      ${t.label}<span style="color:var(--text-muted);margin-left:4px;font-size:0.75rem">₹${t.price}</span>
+    </label>
+  `).join("");
+}
+
+function getSelectedCouponTicketTypeIds() {
+  return Array.from(document.querySelectorAll("input[name='cc-ticket-type']:checked"))
+    .map((cb) => cb.value);
+}
 // ═══════════════════════════════════════════════════════════════════
 // COUPON MANAGER
 // ═══════════════════════════════════════════════════════════════════
@@ -442,7 +471,7 @@ $("refresh-coupons-btn").addEventListener("click", loadCoupons);
 function renderCouponTable(coupons) {
   const tbody = $("coupon-tbody");
   if (!coupons || coupons.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="8" class="table-loading">No coupons yet. Create one above.</td></tr>`; return;
+    tbody.innerHTML = `<tr><td colspan="9" class="table-loading">No coupons yet. Create one above.</td></tr>`; return;
   }
 
   const now = new Date();
@@ -450,8 +479,18 @@ function renderCouponTable(coupons) {
     const expired = c.validUntil && new Date(c.validUntil) < now;
     const valueDisplay = c.type === "percent" ? `${c.value}%`
       : c.type === "flat" ? `₹${c.value}`
-      : c.type === "free" ? "100%"
-      : "1+1";
+        : c.type === "free" ? "100%"
+          : "1+1";
+    // Ticket type restriction display
+    let ticketTypeDisplay = `<span style="color:var(--text-muted);font-size:0.75rem">All types</span>`;
+    if (Array.isArray(c.ticketTypeIds) && c.ticketTypeIds.length > 0) {
+      const labels = c.ticketTypeIds.map((id) => {
+        const match = cachedTicketTypes.find((t) => t.id === id);
+        return match ? match.label : id;
+      });
+      ticketTypeDisplay = labels.map((l) => `<span class="type-pill" style="font-size:0.7rem">${l}</span>`).join(" ");
+    }
+
 
     return `<tr>
       <td>${c.code}</td>
@@ -460,11 +499,12 @@ function renderCouponTable(coupons) {
       <td>${c.usedCount}${c.maxUses !== null ? ` / ${c.maxUses}` : " / ∞"}</td>
       <td>${c.validUntil ? formatDate(c.validUntil) : "No expiry"}</td>
       <td style="color:var(--text-muted);font-size:0.78rem;max-width:160px">${c.description || "—"}</td>
+      <td style="max-width:140px">${ticketTypeDisplay}</td>
       <td>
         ${expired ? `<span style="color:var(--red);font-size:0.72rem">EXPIRED</span>`
-          : c.active
-            ? `<span class="active-pill">● Active</span>`
-            : `<span class="inactive-pill">○ Inactive</span>`}
+        : c.active
+          ? `<span class="active-pill">● Active</span>`
+          : `<span class="inactive-pill">○ Inactive</span>`}
       </td>
       <td>
         <button class="coupon-action-btn" onclick="toggleCoupon('${c.code}', ${c.active})">
@@ -506,6 +546,7 @@ $("create-coupon-btn").addEventListener("click", async () => {
   const validUntil = $("cc-valid-until").value || null;
   const description = $("cc-description").value.trim();
   const minAmount = parseFloat($("cc-min-amount").value) || 0;
+  const ticketTypeIds = getSelectedCouponTicketTypeIds(); // [] = all types
 
   if (!code) { showToast("Coupon code is required", "error"); return; }
   if (!type) { showToast("Select a discount type", "error"); return; }
@@ -525,6 +566,7 @@ $("create-coupon-btn").addEventListener("click", async () => {
         value: value || 0,
         maxUses, validUntil, description, minAmount,
         perUserLimit: 1,
+        ticketTypeIds: ticketTypeIds.length > 0 ? ticketTypeIds : null,
       }),
     });
     const data = await res.json();
@@ -534,6 +576,8 @@ $("create-coupon-btn").addEventListener("click", async () => {
     // Reset form
     $("cc-code").value = ""; $("cc-value").value = ""; $("cc-max-uses").value = "";
     $("cc-valid-until").value = ""; $("cc-description").value = ""; $("cc-min-amount").value = "";
+    // Uncheck all ticket type checkboxes
+    document.querySelectorAll("input[name='cc-ticket-type']").forEach((cb) => { cb.checked = false; });
     loadCoupons();
   } catch (err) {
     showToast(err.message, "error");
@@ -554,4 +598,180 @@ document.querySelectorAll("input[name='cc-type']").forEach((radio) => {
     if (type === "free") $("cc-value").placeholder = "N/A";
     if (type === "bogo") $("cc-value").placeholder = "N/A";
   });
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// EVENT SETTINGS (platform fee, GST, active toggle)
+// ═══════════════════════════════════════════════════════════════════
+
+let currentEventConfig = { platformFeeType: "flat", platformFee: 0, platformFeeGstPercent: 0, isActive: true };
+
+async function loadEventSettings() {
+  try {
+    const res = await fetch(
+      `${CONFIG.API_BASE}/api/events/${eventId}/config`,
+      { headers: { Authorization: `Bearer ${adminToken}` } }
+    );
+    const data = await res.json();
+    if (res.ok && data.config) {
+      currentEventConfig = data.config;
+      applyEventConfigToUI(data.config);
+    }
+  } catch (err) {
+    console.error("Failed to load event settings", err);
+  }
+}
+
+function applyEventConfigToUI(config) {
+  // Active status display
+  const statusEl = $("event-active-status");
+  const toggleBtn = $("toggle-event-active-btn");
+
+  if (config.isActive) {
+    statusEl.innerHTML = `<span style="color:var(--green)">● Booking is <strong>Active</strong></span>`;
+    toggleBtn.textContent = "Set Inactive";
+    toggleBtn.style.background = "var(--red)";
+  } else {
+    statusEl.innerHTML = `<span style="color:var(--red)">○ Booking is <strong>Inactive</strong></span>`;
+    toggleBtn.textContent = "Set Active";
+    toggleBtn.style.background = "";
+  }
+
+  // Fee type radio
+  const feeType = config.platformFeeType === "percent" ? "percent" : "flat";
+  const flatRadio = $("es-fee-flat");
+  const percentRadio = $("es-fee-percent");
+  if (flatRadio && percentRadio) {
+    flatRadio.checked = feeType === "flat";
+    percentRadio.checked = feeType === "percent";
+  }
+  syncFeeTypeLabels(feeType);
+
+  // Fee inputs
+  $("es-platform-fee").value = config.platformFee ?? 0;
+  $("es-gst-percent").value = config.platformFeeGstPercent ?? 0;
+
+  updateFeePreview(feeType, config.platformFee, config.platformFeeGstPercent);
+}
+
+function syncFeeTypeLabels(feeType) {
+  const label = $("es-fee-label");
+  const hint = $("es-fee-hint");
+  const input = $("es-platform-fee");
+  if (feeType === "percent") {
+    if (label) label.textContent = "Platform Fee (% of order)";
+    if (hint) hint.textContent = "Percentage of the order total after coupon. Enter 0 for no fee. Max 100.";
+    if (input) { input.placeholder = "e.g. 2"; input.max = "100"; }
+  } else {
+    if (label) label.textContent = "Platform Fee (₹)";
+    if (hint) hint.textContent = "Fixed ₹ amount added to every paid booking. Enter 0 for no fee.";
+    if (input) { input.placeholder = "e.g. 3"; input.removeAttribute("max"); }
+  }
+}
+
+function getSelectedFeeType() {
+  return document.querySelector("input[name='es-fee-type']:checked")?.value || "flat";
+}
+
+function updateFeePreview(feeType, fee, gstPercent) {
+  const preview = $("es-preview");
+  fee = Number(fee) || 0;
+  gstPercent = Number(gstPercent) || 0;
+  if (fee === 0) {
+    preview.textContent = "No platform fee will be charged.";
+    return;
+  }
+  if (feeType === "percent") {
+    // Show an example using ₹500 order
+    const exampleOrder = 500;
+    const exampleFee = Number((exampleOrder * fee / 100).toFixed(2));
+    const exampleGst = Number((exampleFee * gstPercent / 100).toFixed(2));
+    const exampleTotal = Number((exampleFee + exampleGst).toFixed(2));
+    preview.textContent = `Preview (on a ₹${exampleOrder} order): ${fee}% fee = ₹${exampleFee.toFixed(2)}` +
+      (gstPercent > 0 ? ` + GST (${gstPercent}%) ₹${exampleGst.toFixed(2)} = ₹${exampleTotal.toFixed(2)} total fee.` : ` total fee. No GST.`);
+  } else {
+    const gst = Number((fee * gstPercent / 100).toFixed(2));
+    const total = Number((fee + gst).toFixed(2));
+    preview.textContent = `Preview: Platform fee ₹${fee.toFixed(2)}` +
+      (gstPercent > 0 ? ` + GST (${gstPercent}%) ₹${gst.toFixed(2)} = ₹${total.toFixed(2)} added per booking.` : ` added per booking. No GST.`);
+  }
+}
+
+// Live preview + label sync as admin types or changes type
+["es-platform-fee", "es-gst-percent"].forEach((id) => {
+  $(id).addEventListener("input", () => {
+    updateFeePreview(getSelectedFeeType(), $("es-platform-fee").value, $("es-gst-percent").value);
+  });
+});
+document.querySelectorAll("input[name='es-fee-type']").forEach((radio) => {
+  radio.addEventListener("change", () => {
+    syncFeeTypeLabels(radio.value);
+    updateFeePreview(radio.value, $("es-platform-fee").value, $("es-gst-percent").value);
+  });
+});
+
+// Save fee config
+$("save-event-config-btn").addEventListener("click", async () => {
+  const platformFeeType = getSelectedFeeType();
+  const platformFee = parseFloat($("es-platform-fee").value);
+  const platformFeeGstPercent = parseFloat($("es-gst-percent").value);
+
+  if (isNaN(platformFee) || platformFee < 0) { showToast("Enter a valid platform fee (0 or more)", "error"); return; }
+  if (platformFeeType === "percent" && platformFee > 100) { showToast("Percent fee cannot exceed 100%", "error"); return; }
+  if (isNaN(platformFeeGstPercent) || platformFeeGstPercent < 0 || platformFeeGstPercent > 100) {
+    showToast("GST percent must be between 0 and 100", "error"); return;
+  }
+
+  const btn = $("save-event-config-btn");
+  btn.textContent = "Saving..."; btn.disabled = true;
+
+  try {
+    const res = await fetch(`${CONFIG.API_BASE}/api/events/${eventId}/config`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` },
+      body: JSON.stringify({ platformFeeType, platformFee, platformFeeGstPercent }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to save");
+
+    currentEventConfig.platformFeeType = platformFeeType;
+    currentEventConfig.platformFee = platformFee;
+    currentEventConfig.platformFeeGstPercent = platformFeeGstPercent;
+    showToast("Fee configuration saved!", "success");
+    updateFeePreview(platformFeeType, platformFee, platformFeeGstPercent);
+  } catch (err) {
+    showToast(err.message, "error");
+  } finally {
+    btn.textContent = "💾 Save Fee Config"; btn.disabled = false;
+  }
+});
+
+// Toggle event active/inactive
+$("toggle-event-active-btn").addEventListener("click", async () => {
+  const willBeActive = !currentEventConfig.isActive;
+  const confirm_msg = willBeActive
+    ? `Enable booking for event "${eventId}"? Customers will be able to purchase tickets again.`
+    : `Disable booking for event "${eventId}"? No new tickets can be purchased until re-enabled.`;
+
+  if (!confirm(confirm_msg)) return;
+
+  const btn = $("toggle-event-active-btn");
+  btn.textContent = "Updating..."; btn.disabled = true;
+
+  try {
+    const res = await fetch(`${CONFIG.API_BASE}/api/events/${eventId}/toggle-active`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${adminToken}` },
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed");
+
+    currentEventConfig.isActive = data.isActive;
+    applyEventConfigToUI(currentEventConfig);
+    showToast(`Event booking ${data.isActive ? "enabled" : "disabled"}`, "success");
+  } catch (err) {
+    showToast(err.message, "error");
+  } finally {
+    btn.disabled = false;
+  }
 });

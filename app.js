@@ -11,6 +11,7 @@ const state = {
   whatsapp: "",
   quantity: 1,
   coupon: null,
+  needYogaMat: false,
   // Selected ticket type (required — no fallback)
   selectedTicketType: null,
   ticketTypesLoaded: false,
@@ -23,6 +24,13 @@ const state = {
     gst: 0,
     roundOff: 0,
     grandTotal: 0,
+  },
+  // Event-level config loaded from backend
+  eventConfig: {
+    platformFeeType: "flat",
+    platformFee: 0,
+    platformFeeGstPercent: 0,
+    isActive: true,
   },
 };
 
@@ -284,33 +292,72 @@ function showCouponApplied(coupon, pricing) {
 
 /* ── Platform Fee Calculation ─────────────────────────── */
 function calculatePlatformFee(amountAfterCoupon) {
-  // if (amountAfterCoupon <= 0) return { platformFee: 0, gst: 0, roundOff: 0, totalWithFee: 0 };
-  // const platformFee = amountAfterCoupon * 0.02;
-  // const gst = platformFee * 0.18;
-  // const exactTotal = amountAfterCoupon + platformFee + gst;
-  // const roundedTotal = Math.round(exactTotal);
-  // const roundOff = roundedTotal - exactTotal;
-  // return {
-  //   platformFee: Number(platformFee.toFixed(2)),
-  //   gst: Number(gst.toFixed(2)),
-  //   roundOff: Number(roundOff.toFixed(2)),
-  //   totalWithFee: roundedTotal,
-  // };
   if (amountAfterCoupon <= 0) return { platformFee: 0, gst: 0, roundOff: 0, totalWithFee: 0 };
-  // const platformFee = amountAfterCoupon * 0.02;
-  const platformFee = 3;
-  const gst = 0;
-  const exactTotal = amountAfterCoupon + platformFee + gst;
-  const roundedTotal = 0;
-  const roundOff = 0;
+  const feeType = state.eventConfig.platformFeeType === "percent" ? "percent" : "flat";
+  const feeValue = state.eventConfig.platformFee || 0;
+  const fee = feeType === "percent"
+    ? Number((amountAfterCoupon * feeValue / 100).toFixed(2))
+    : feeValue;
+  const gstPercent = state.eventConfig.platformFeeGstPercent || 0;
+  const gst = Number((fee * gstPercent / 100).toFixed(2));
+  const exactTotal = amountAfterCoupon + fee + gst;
+  const roundedTotal = Math.round(exactTotal);
+  const roundOff = Number((roundedTotal - exactTotal).toFixed(2));
   return {
-    platformFee: Number(platformFee.toFixed(2)),
-    gst: 0,
-    roundOff: 0,
-    totalWithFee: exactTotal,
+    platformFee: Number(fee.toFixed(2)),
+    gst,
+    roundOff,
+    totalWithFee: roundedTotal,
   };
 }
 
+/* ── Event Config ─────────────────────────────────────── */
+async function loadEventConfig() {
+  try {
+    const res = await fetch(`${CONFIG.API_BASE}/api/events/${CONFIG.EVENT_ID}/config`);
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.config) {
+      state.eventConfig = data.config;
+      if (!data.config.isActive) {
+        showEventClosed();
+      }
+    }
+  } catch (_) {
+    // Non-fatal: fall back to zero fees and open booking
+  }
+}
+
+function showEventClosed() {
+  disablePayButton("Booking Closed");
+
+  // Show a notice above the ticket type selector
+  const noticeId = "event-closed-notice";
+  if (!$(noticeId)) {
+    const notice = document.createElement("div");
+    notice.id = noticeId;
+    notice.style.cssText = [
+      "text-align:center",
+      "padding:1.25rem 1rem",
+      "color:#ef4444",
+      "font-family:'Montserrat',sans-serif",
+      "font-size:0.9rem",
+      "border:1.5px solid #fca5a5",
+      "border-radius:12px",
+      "background:rgba(239,68,68,0.06)",
+      "margin-bottom:1rem",
+    ].join(";");
+    notice.innerHTML = `<div style="font-size:1.5rem;margin-bottom:0.4rem">🚫</div>
+      <div style="font-weight:700;font-size:1rem;margin-bottom:0.25rem">Booking Closed</div>
+      <div>Ticket sales for this event are currently paused. Please check back later.</div>`;
+
+    const ticketTypeSection = $("ticket-types-loading")?.parentElement;
+    if (ticketTypeSection) ticketTypeSection.insertBefore(notice, ticketTypeSection.firstChild);
+  }
+
+  // Block the pay button permanently when closed
+  $("pay-btn").addEventListener("click", (e) => e.stopImmediatePropagation(), true);
+}
 /* ── Price Display ────────────────────────────────────── */
 function updatePriceDisplay() {
   const qty = state.quantity;
@@ -394,6 +441,8 @@ function validateForm() {
   const phone = $("phone").value.trim().replace(/\s/g, "");
   const isWhatsapp = $("is-whatsapp").checked;
   const whatsapp = isWhatsapp ? phone : $("whatsapp").value.trim().replace(/\s/g, "");
+  const needYogaMat =
+    document.querySelector('input[name="needYogaMat"]:checked')?.value === "yes";
 
   if (name.length < 2) {
     $("name-err").textContent = "Please enter your full name";
@@ -436,6 +485,8 @@ function validateForm() {
     state.email = email;
     state.phone = phone;
     state.whatsapp = whatsapp;
+    state.needYogaMat = needYogaMat;
+
   }
   return ok;
 }
@@ -476,6 +527,7 @@ async function initiatePayment() {
       eventId: CONFIG.EVENT_ID,
       couponCode: state.coupon?.code || null,
       quantity: state.quantity,
+      needYogaMat: state.needYogaMat,
     };
 
     // Ticket type is required
@@ -656,4 +708,4 @@ document.querySelectorAll(".faq-q").forEach((btn) => {
 
 /* ── Init ─────────────────────────────────────────────── */
 updatePriceDisplay();
-loadTicketTypes();
+loadEventConfig().then(loadTicketTypes);
