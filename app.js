@@ -15,6 +15,7 @@ const state = {
   // Selected ticket type (required — no fallback)
   selectedTicketType: null,
   ticketTypesLoaded: false,
+  ticketTypesLoading: true,
   pricing: {
     original: 0,
     discount: 0,
@@ -44,12 +45,15 @@ function showToast(msg, type = "info") {
 
 /* ── Ticket Types ─────────────────────────────────────── */
 async function loadTicketTypes() {
+  state.ticketTypesLoading = true;
+  updatePriceDisplay();
   try {
     const res = await fetch(`${CONFIG.API_BASE}/api/events/${CONFIG.EVENT_ID}/ticket-types`);
     if (!res.ok) throw new Error("Failed to load");
     const data = await res.json();
 
     $("ticket-types-loading").style.display = "none";
+    state.ticketTypesLoading = false;
 
     if (!data.ticketTypes || data.ticketTypes.length === 0) {
       showTicketTypeError("No ticket types available for this event.");
@@ -60,6 +64,7 @@ async function loadTicketTypes() {
     renderTicketTypeCards(data.ticketTypes);
   } catch (_) {
     $("ticket-types-loading").style.display = "none";
+    state.ticketTypesLoading = false;
     showTicketTypeError("Failed to load ticket options. Please refresh the page.");
   }
 }
@@ -372,7 +377,9 @@ function updatePriceDisplay() {
     $("price-total").textContent = `₹0`;
     $("discount-row").classList.add("hidden");
     $("bogo-row").classList.add("hidden");
-    if (!state.ticketTypesLoaded) {
+    if (state.ticketTypesLoading) {
+      disablePayButton("Loading Tickets...");
+    } else if (!state.ticketTypesLoaded) {
       disablePayButton("Tickets Unavailable");
     } else {
       disablePayButton("Select a Ticket Type");
