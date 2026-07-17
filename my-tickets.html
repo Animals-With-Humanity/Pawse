@@ -16,9 +16,10 @@
       max-width: 600px;
       margin: 100px auto 40px;
       padding: 2rem;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 24px;
+      backdrop-filter: blur(12px);
     }
 
     .ticket-list {
@@ -29,38 +30,43 @@
     }
 
     .ticket-item {
-      padding: 1rem;
-      border: 1px solid #000000;
-      border-radius: 8px;
-      background: rgb(9 11 0 / 24%);
+      padding: 1.25rem;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.18);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      backdrop-filter: blur(8px);
     }
 
     .ticket-info h4 {
       margin: 0 0 0.5rem 0;
-      color: var(--text-bright);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 700;
     }
 
     .ticket-info p {
       margin: 0;
-      color: var(--text-dim);
+      color: rgba(255,255,255,0.75);
       font-size: 0.9rem;
     }
 
     .view-btn {
-      background: var(--accent);
-      color: var(--bg);
+      background: #B8F500;
+      color: #1a1a1a;
       padding: 0.5rem 1rem;
       border-radius: 8px;
       text-decoration: none;
-      font-weight: 600;
-      font-size: 0.9rem;
+      font-weight: 700;
+      font-size: 0.85rem;
+      white-space: nowrap;
     }
 
     .view-btn:hover {
       opacity: 0.9;
+      transform: translateY(-1px);
     }
 
     .ticket-summary-banner {
@@ -68,8 +74,8 @@
       align-items: center;
       gap: 0.6rem;
       padding: 0.75rem 1rem;
-      background: rgba(190, 245, 33, 0.1);
-      border: 1px solid rgba(190, 245, 33, 0.25);
+      background: rgba(184, 245, 0, 0.15);
+      border: 1px solid rgba(184, 245, 0, 0.4);
       border-radius: 10px;
       margin-bottom: 0.5rem;
     }
@@ -82,21 +88,18 @@
       font-family: 'DM Sans', sans-serif;
       font-weight: 600;
       font-size: 0.9rem;
-      color: var(--green, #eeff66);
+      color: #B8F500;
     }
   </style>
 </head>
 
-<body class="ticket-page">
-  <div class="bg-glow bg-glow-1"></div>
-  <div class="bg-glow bg-glow-2"></div>
-
+<body>
   <header style="
     position: fixed; top: 0; left: 0; width: 100%; z-index: 50;
-    background:white; backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(0,0,0,0.08);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    background: rgba(200, 55, 0, 0.88); backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,255,255,0.18);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
   ">
 
     <div
@@ -106,21 +109,21 @@
         <img src="./logo.png" alt="AWH Logo" style="height: 40px; width: 40px; object-fit: contain;" />
         <div style="display: flex; flex-direction: column;">
           <span
-            style="font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:800;color:black;line-height:1;">PAWSE
+            style="font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:800;color:white;line-height:1;">PAWSE
           </span>
 
           <span
-            style="font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;color:#5A4A52;text-transform:uppercase;letter-spacing:0.15em;margin-top:3px;">Animals
+            style="font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;color:rgba(255,255,255,0.75);text-transform:uppercase;letter-spacing:0.15em;margin-top:3px;">Animals
             With Humanity</span>
         </div>
       </a>
 
       <nav id="desktop-nav" style="display: flex; align-items: center; gap: 0.75rem;">
         <a href="#"
-          style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.875rem;color:rgb(75, 85, 99);text-decoration:none;padding:0.5rem 1rem;border-radius:9999px;transition:color 0.2s,background 0.2s;">MY
+          style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.875rem;color:rgba(255,255,255,0.85);text-decoration:none;padding:0.5rem 1rem;border-radius:9999px;transition:color 0.2s,background 0.2s;">MY
           TICKETS</a>
         <a href="index.html#book"
-          style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.625rem 1.25rem;background:rgb(217, 143, 174);color:rgb(255, 255, 255);font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.875rem;border-radius:9999px;text-decoration:none;transition:box-shadow 0.2s,transform 0.2s;">
+          style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.625rem 1.25rem;background:#B8F500;color:#1a1a1a;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.875rem;border-radius:9999px;text-decoration:none;transition:box-shadow 0.2s,transform 0.2s;">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
             stroke="none" style="color:white;">
             <path
@@ -158,9 +161,9 @@
     display: none;
     flex-direction: column;
     padding: 1rem 1.5rem 1.5rem;
-    background: white;
-    border-top: 1px solid rgba(0,0,0,0.07);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    background: rgba(200,55,0,0.97);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
     gap: 0.5rem;
   ">
 
@@ -207,8 +210,8 @@
   </header>
 
   <main class="my-tickets-container">
-    <h2 class="section-title" style="font-size: 2.5rem; text-align: center; margin-bottom: 0.5rem;">Find My Tickets</h2>
-    <p style="text-align: center;  margin-bottom: 2rem;">Enter the phone number used during
+    <h2 class="section-title" style="font-size: 2.5rem; text-align: center; margin-bottom: 0.5rem; color: white;">Find My Tickets 🐱</h2>
+    <p style="text-align: center; color: rgba(255,255,255,0.8); margin-bottom: 2rem;">Enter the phone number used during
       booking</p>
 
     <div class="field-group">

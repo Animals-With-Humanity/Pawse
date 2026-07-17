@@ -28,11 +28,12 @@
   <style>
     /* ── Single-step form overrides -----------─ */
     .single-form-card {
-      background: var(--surface);
+      background: rgba(255, 255, 255, 0.97);
       border-radius: 20px;
       padding: 2.5rem;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      box-shadow: 0 4px 40px rgba(0, 0, 0, 0.07);
+      border: 2px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 8px 48px rgba(0, 0, 0, 0.15);
+      color: #1a1a1a;
     }
 
     /* Section divider inside form */
@@ -46,10 +47,10 @@
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: #5A4A52;
+      color: #F5650A;
       margin-bottom: 1.25rem;
       padding-bottom: 0.5rem;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      border-bottom: 1px solid rgba(245, 101, 10, 0.15);
     }
 
     /* Compact counter */
@@ -378,10 +379,10 @@
   <!-- Header -->
   <header style="
     position: fixed; top: 0; left: 0; width: 100%; z-index: 50;
-    background:white; backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(0,0,0,0.08);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    background: rgba(255, 255, 255, 0.97); backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,255,255,0.18);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
   ">
     <div
       style="max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; height: 80px;">
@@ -390,21 +391,21 @@
         <img src="./logo.png" alt="AWH Logo" style="height: 40px; width: 40px; object-fit: contain;" />
         <div style="display: flex; flex-direction: column;">
           <span
-            style="font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:800;color:black;line-height:1;">PAWSE
+            style="font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:800;color:var(--text);line-height:1;">PAWSE
           </span>
 
           <span
-            style="font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;color:#5A4A52;text-transform:uppercase;letter-spacing:0.15em;margin-top:3px;">Animals
+            style="font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:0.15em;margin-top:3px;">Animals
             With Humanity</span>
         </div>
       </a>
 
       <nav id="desktop-nav" style="display: flex; align-items: center; gap: 0.75rem;">
         <a href="my-tickets.html"
-          style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.875rem;color:rgb(75, 85, 99);text-decoration:none;padding:0.5rem 1rem;border-radius:9999px;transition:color 0.2s,background 0.2s;">MY
+          style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.875rem;color:var(--text);text-decoration:none;padding:0.5rem 1rem;border-radius:9999px;transition:color 0.2s,background 0.2s;">MY
           TICKETS</a>
         <a href="#book"
-          style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.625rem 1.25rem;background:rgb(217, 143, 174);color:rgb(255, 255, 255);font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.875rem;border-radius:9999px;text-decoration:none;transition:box-shadow 0.2s,transform 0.2s;">
+          style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.625rem 1.25rem;background:#B8F500;color:#1a1a1a;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.875rem;border-radius:9999px;text-decoration:none;transition:box-shadow 0.2s,transform 0.2s;">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
             stroke="none" style="color:white;">
             <path
@@ -426,15 +427,15 @@
     </div>
 
     <div id="mobile-menu"
-      style="display:none;flex-direction:column;padding:1rem 1.5rem 1.5rem;background:white;border-top:1px solid rgba(0,0,0,0.07);box-shadow:0 8px 24px rgba(0,0,0,0.08);gap:0.5rem;">
+      style="display:none;flex-direction:column;padding:1rem 1.5rem 1.5rem;background:rgba(255, 255, 255, 0.97);border-top:1px solid rgba(255,255,255,0.1);box-shadow:0 8px 24px rgba(0,0,0,0.2);gap:0.5rem;">
       <a href="my-tickets.html"
-        style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.95rem;color:#374151;text-decoration:none;padding:0.875rem 1rem;border-radius:12px;transition:background 0.2s,color 0.2s;">MY
+        style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.95rem;color:var(--text);text-decoration:none;padding:0.875rem 1rem;border-radius:12px;transition:background 0.2s,color 0.2s;">MY
         TICKETS</a>
       <a href="#FAQ"
-        style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.95rem;color:#374151;text-decoration:none;padding:0.875rem 1rem;border-radius:12px;transition:background 0.2s,color 0.2s;">
+        style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.95rem;color:var(--text);text-decoration:none;padding:0.875rem 1rem;border-radius:12px;transition:background 0.2s,color 0.2s;">
         FAQ</a>
       <a href="mailto:kartikgadekar03@gmail.com"
-        style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.95rem;color:#374151;text-decoration:none;padding:0.875rem 1rem;border-radius:12px;transition:background 0.2s,color 0.2s;">
+        style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.95rem;color:var(--text);text-decoration:none;padding:0.875rem 1rem;border-radius:12px;transition:background 0.2s,color 0.2s;">
         Contact</a>
       <a href="#book" id="mobile-book-btn"
         style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.875rem 1rem;background:#FEF600;color:#1F2937;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.95rem;border-radius:12px;text-decoration:none;margin-top:0.25rem;">
@@ -449,26 +450,48 @@
   </header>
 
   <!-- Hero Section -->
-  <section class="hero">
+  <section class="hero" style="position:relative;overflow:visible;">
+    <!-- Floating cat decorations -->
+    <!-- <img src="./paw.svg" alt="Party Cat"
+      style="position:absolute;left: -4rem;top:90px;width: 23rem;transform:rotate(-12deg);z-index:2;pointer-events:none;filter:drop-shadow(4px 8px 16px rgba(0,0,0,0.25));mix-blend-mode:multiply;">
+
+
+    <img src="./cat2.svg" alt="Party Cat"
+      style="position:absolute;left: 35rem;top: 1rem;width: 32rem;transform:rotate(10deg);z-index:2;pointer-events:none;filter:drop-shadow(4px 8px 16px rgba(0,0,0,0.25));mix-blend-mode:multiply;">
+
+
+    <img src="./cat3.svg" alt="Party Cat"
+      style="position:absolute;left: 16rem;top: 35rem;width: 21rem;transform: rotate(20deg);z-index:2;pointer-events:none;filter:drop-shadow(4px 8px 16px rgba(0,0,0,0.25));mix-blend-mode:multiply;">
+
+
+
+    <img src="./cat4.svg" alt="Party Cat"
+      style="position:absolute;right: 31rem;top: 27rem;width: 48rem;transform: rotate(13deg);z-index:2;pointer-events:none;filter:drop-shadow(4px 8px 16px rgba(0,0,0,0.25));mix-blend-mode:multiply;">
+
+
+    <img src="./cat5.svg" alt="Party Cat"
+      style="position:absolute;left: 33rem;top: 24rem;width: 48rem;transform: rotate(3deg);z-index:2;pointer-events:none;filter:drop-shadow(4px 8px 16px rgba(0,0,0,0.25));mix-blend-mode:multiply;"> -->
+
     <div class="hero-eyebrow">
       <span class="dot"></span>
-      <span class="date-top">21st JUNE | Studio Jammin, Bhopal</span>
+      <span class="date-top" style="color:rgba(255,255,255,0.9);">26th JULY | Studio Jammin, Bhopal</span>
       <span class="dot"></span>
     </div>
     <h1 class="hero-title" style="font-size: clamp(3rem, 6vw, 4.5rem);">
-      <!-- <span class="hero-title-line reveal-up" style="--delay:0.15s">YOGA WITH PAWS</span> -->
-      <span class="hero-title-line reveal-up" style="--delay:0.1s">YOGA</span>
+      <span class="hero-title-line reveal-up"
+        style="--delay:0.1s;color:#B8F500;-webkit-text-stroke:2px rgba(0,0,0,0.15);">KITTY</span>
 
-      <span class="hero-with reveal-up" style="--delay:0.2s">
-        with
+      <span class="hero-with reveal-up" style="--delay:0.2s;color:white;font-size:clamp(1.8rem,5vw,6rem);">
+        Party!
       </span>
 
-      <span class="hero-title-line reveal-up" style="--delay:0.3s">PUPPIES</span>
-      <!-- <span class="hero-title-line reveal-up" style="--delay:0.15s">YWP</span> -->
-      <!-- <span class="hero-title-line hero-title-sub reveal-up" style="--delay:0.2s">90's Art Party</span> -->
+      <!-- <span
+        style="display:block;font-family:'Montserrat',sans-serif;font-size:clamp(1rem,2.5vw,1.5rem);font-weight:700;color:#B8F500;letter-spacing:0.12em;text-transform:uppercase;margin-top:3.5rem;"
+        class="reveal-up" style2="--delay:0.3s">GET READY FOR THE CRAZIEST ART PARTY!! 🎨</span> -->
     </h1>
-    <a href="#book" class="cta-btn reveal-up" style="--delay:0.55s; margin-top: 2rem;">
-      <span>BOOK YOUR TICKETS NOW!!</span>
+    <a href="#book" class="cta-btn reveal-up"
+      style="--delay:0.55s; margin-top: 2rem;background:#1565E8;color:white;font-weight:800;letter-spacing:0.05em;">
+      <span>BOOK YOUR TICKETS NOW!! 🐾</span>
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
         <path d="M4 10h12M10 4l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
           stroke-linejoin="round" />
@@ -478,7 +501,7 @@
   </section>
 
   <!-- Carousel -->
-  <section class="carousel-section">
+  <!-- <section class="carousel-section">
     <div class="carousel-inner">
       <div class="carousel-eyebrow">Event Highlights</div>
       <h2 class="carousel-heading">What To Expect</h2>
@@ -533,10 +556,10 @@
       </button>
       <div class="c-counter" id="c-counter"></div>
     </div>
-  </section>
-  <section class="instructor-section">
-    <!-- <div class="section-label">Meet Puneeta</div> -->
-    <h2 class="section-title">Your Paw-sitive Guru for Yoga with puppies</h2>
+  </section> -->
+  <!-- <section class="instructor-section">
+    <h2 class="section-title" style="color:white;text-shadow:0 2px 8px rgba(0,0,0,0.2);">Your Paw-sitive Guru for the
+      Kitty Party</h2>
 
     <div class="instructor-card">
 
@@ -549,9 +572,9 @@
           Meet Puneeta
         </div>
 
-        <!-- <div class="instructor-role">
+         <div class="instructor-role">
           Certified Yoga Instructor
-        </div> -->
+        </div>
 
         <p>
           Puneeta, an ISB graduate and engineer has been embracing the art of yoga for a decade. Driven by a passion to
@@ -575,10 +598,11 @@
 
     </div>
   </section>
+    -->
   <!-- ═══ Booking Form (single step) ═══ -->
   <section class="booking-section" id="book">
-    <div class="section-label"></div>
-    <h2 class="section-title">Secure Your Spot</h2>
+    <div class="section-label" style="color:#B8F500;"></div>
+    <h2 class="section-title" style="color:white;text-shadow:0 2px 8px rgba(0,0,0,0.2);">Secure Your Spot 🐾</h2>
 
     <div class="booking-layout">
 
@@ -635,13 +659,13 @@
             </div>
             <span class="field-error" id="whatsapp-err"></span>
           </div>
-          <div class="field-group choose" style="margin-top:1rem;">
+          <!-- <div class="field-group choose" style="margin-top:1rem;">
             <label class="field-label ">Please Choose</label>
 
-            <div style="display:flex;gap:1rem;margin-top:0.5rem;">
+            <div style="display:flex;gap:1rem;margin-top:0.5rem;flex-wrap:wrap;">
               <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;color: var(--text);">
                 <input type="radio" name="needYogaMat" value="yes" />
-                I need a yoga mat (Price - Rs.400)
+                I need a yoga mat (<span id="yoga-mat-price-label">loading...</span>)
               </label>
 
               <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;color: var(--text);">
@@ -651,7 +675,7 @@
             </div>
 
             <span class="field-error" id="yoga-mat-err"></span>
-          </div>
+          </div> -->
         </div>
 
         <!-- SECTION: Ticket Type -->
@@ -767,16 +791,13 @@
       <aside class="event-info">
         <div class="info-card">
           <div class="info-card-label">EVENT</div>
-          <div class="info-card-title">YOGA WITH <br>PUPPIES</div>
-          <!-- <div class="info-card-title">PAWSE <br>'26</div>
-          <div class="info-card-title">One Last Chapter </div>
-          <div class="info-card-title">Infinite Memories </div> -->
+          <div class="info-card-title">KITTY PARTY 🐱</div>
 
           <div class="info-detail">
             <span class="info-icon">📅</span>
             <div>
               <div class="info-detail-title">Date &amp; Time</div>
-              <div class="info-detail-val">21st JUNE, 7:00 AM – 8:30 AM</div>
+              <div class="info-detail-val">26th JULY | 02:00 – 05:00 PM</div>
             </div>
           </div>
           <div class="info-detail">
@@ -799,12 +820,11 @@
         <div class="info-card perks-card">
           <div class="info-card-label">INCLUDED</div>
           <ul class="perks-list">
-            <li class="perk-item"><span class="perk-check">✓</span>Meet Puppies for Adoption</li>
-            <!-- <li class="perk-item"><span class="perk-check">✓</span>Take your masterpiece home</li> -->
-            <li class="perk-item"><span class="perk-check">✓</span>Art therapy with a token you can take home</li>
+            <li class="perk-item"><span class="perk-check">✓</span>Paw Adoption</li>
+            <li class="perk-item"><span class="perk-check">✓</span>Art Workshop</li>
+            <li class="perk-item"><span class="perk-check">✓</span>Live Jamming</li>
+            <li class="perk-item"><span class="perk-check">✓</span>Iced Tea &amp; Snacks</li>
             <li class="perk-item"><span class="perk-check">✓</span>All proceeds to animal rescue</li>
-            <!-- <li class="perk-item"><span class="perk-check">✓</span>TICKET</li> -->
-
           </ul>
         </div>
       </aside>
