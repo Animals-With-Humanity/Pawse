@@ -128,10 +128,10 @@ function createTicketCard(ticket, index, total) {
 
   ticketDiv.innerHTML = `
     <div class="ticket-left">
-      <div class="ticket-event-name">YOGA WITH PUPPIES</div>
+      <div class="ticket-event-name">Kitty Party</div>
       <div class="ticket-event-year">2026</div>
-      <div class="ticket-date">2026</div>
-      <div class="ticket-venue"></div>
+      <div class="ticket-date">26 JULY 2026</div>
+      <div class="ticket-venue">Studio Jammin</div>
 
       <div class="ticket-divider">
         <div class="ticket-notch left-notch"></div>
