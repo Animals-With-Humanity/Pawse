@@ -33,7 +33,7 @@
 
   <header style="
     position: fixed; top: 0; left: 0; width: 100%; z-index: 50;
-    background: rgba(200, 55, 0, 0.88); backdrop-filter: blur(14px);
+    background: rgba(255, 255, 255, 0.97); backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid rgba(255,255,255,0.18);
     box-shadow: 0 2px 12px rgba(0,0,0,0.15);
@@ -46,11 +46,11 @@
         <img src="./logo.png" alt="AWH Logo" style="height: 40px; width: 40px; object-fit: contain;" />
         <div style="display: flex; flex-direction: column;">
           <span
-            style="font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:800;color:white;line-height:1;">PAWSE
+            style="font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:800;color:var(--text);line-height:1;">PAWSE
           </span>
 
           <span
-            style="font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;color:rgba(255,255,255,0.75);text-transform:uppercase;letter-spacing:0.15em;margin-top:3px;">Animals
+            style="font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:0.15em;margin-top:3px;">Animals
             With Humanity</span>
         </div>
       </a>
@@ -58,7 +58,7 @@
       <!-- Desktop Nav -->
       <nav id="desktop-nav" style="display: flex; align-items: center; gap: 0.75rem;">
         <a href="my-tickets.html"
-          style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.875rem;color:rgba(255,255,255,0.85);text-decoration:none;padding:0.5rem 1rem;border-radius:9999px;transition:color 0.2s,background 0.2s;">MY
+          style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.875rem;color:var(--text);text-decoration:none;padding:0.5rem 1rem;border-radius:9999px;transition:color 0.2s,background 0.2s;">MY
           TICKETS</a>
         <a href="index.html#book"
           style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.625rem 1.25rem;background:#B8F500;color:#1a1a1a;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.875rem;border-radius:9999px;text-decoration:none;transition:box-shadow 0.2s,transform 0.2s;">
@@ -99,7 +99,7 @@
     display: none;
     flex-direction: column;
     padding: 1rem 1.5rem 1.5rem;
-    background: rgba(200,55,0,0.97);
+    background: rgba(255, 255, 255, 0.97);
     border-top: 1px solid rgba(255,255,255,0.1);
     box-shadow: 0 8px 24px rgba(0,0,0,0.2);
     gap: 0.5rem;
@@ -109,7 +109,7 @@
       font-family: 'Montserrat', sans-serif;
       font-weight: 600;
       font-size: 0.95rem;
-      color: #374151;
+      color: var(--text);
       text-decoration: none;
       padding: 0.875rem 1rem;
       border-radius: 12px;
@@ -118,10 +118,10 @@
         onmouseout="this.style.background='transparent'; this.style.color='#374151'">MY TICKETS</a>
 
       <a href="index.html#FAQ"
-        style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.95rem;color:#374151;text-decoration:none;padding:0.875rem 1rem;border-radius:12px;transition:background 0.2s,color 0.2s;">
+        style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.95rem;color:var(--text);text-decoration:none;padding:0.875rem 1rem;border-radius:12px;transition:background 0.2s,color 0.2s;">
         FAQ</a>
       <a href="mailto:team@awhbharat.org"
-        style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.95rem;color:#374151;text-decoration:none;padding:0.875rem 1rem;border-radius:12px;transition:background 0.2s,color 0.2s;">
+        style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.95rem;color:var(--text);text-decoration:none;padding:0.875rem 1rem;border-radius:12px;transition:background 0.2s,color 0.2s;">
         Contact</a>
       <a href="index.html#book" id="mobile-book-btn" style="
       display: flex;
