@@ -1,0 +1,52 @@
+{
+  "eventId": "KTP",
+  "name": "Kitty Party",
+  "tagline": "KITTU Party!",
+  "description": "GET READY FOR THE CRAZIEST ART PARTY!!",
+  "venue": "Studio Jammin, Char Imili",
+  "venueMapUrl": "https://maps.app.goo.gl/LUCJtuf2mupL4WkWA",
+  "address": "jammin Studio, Bhopal",
+  "date": "26th August 2026",
+  "dateShort": "26th AUGUST",
+  "time": "02:00 – 05:00 PM",
+  "passType": "Single Entry",
+  "theme": {
+    "primary": "#1565E8",
+    "secondary": "#B8F500",
+    "background": "#F5650A",
+    "text": "#374151"
+  },
+  "images": {
+    "logo": "/logo.png",
+    "decorations": ["/paw.svg", "/cat2.svg", "/cat3.svg","/cat4.svg", "/cat5.svg"]
+  },
+  "perks": [
+    "Paw Adoption",
+    "Art Workshop",
+    "Live Jamming",
+    "Iced Tea & Snacks",
+    "All proceeds to animal rescue"
+  ],
+  "faq": [
+    {
+      "q": "How do I get my ticket after payment?",
+      "a": "You'll be redirected to a ticket page immediately after payment. Your ticket with QR code will also be accessible anytime via the link sent to you."
+    },
+    {
+      "q": "Can I transfer my ticket to someone else?",
+      "a": "Tickets are non-transferable. Each ticket is linked to the registrant's phone number."
+    },
+    {
+      "q": "What is the refund policy?",
+      "a": "Refunds are available up to 7 days before the event. Contact us at team@awhbharat.org for refund requests."
+    }
+  ],
+  "registrationFields": [
+    { "name": "name", "label": "Full Name", "type": "text", "required": true, "placeholder": "Pawse", "autoComplete": "name", "validate": "name" },
+    { "name": "email", "label": "Email Address", "type": "email", "required": true, "placeholder": "awh@gmail.com", "autoComplete": "email", "validate": "email" },
+    { "name": "phone", "label": "Phone Number", "type": "tel", "required": true, "placeholder": "7067XXXXXX", "autoComplete": "tel", "validate": "indianMobile" },
+    { "name": "isWhatsapp", "label": "This mobile number is on WhatsApp", "type": "checkbox", "required": false, "default": true },
+    { "name": "whatsapp", "label": "WhatsApp Number (Optional)", "type": "tel", "required": false, "placeholder": "98765 43210", "validate": "indianMobileOptional", "hideWhenToggleChecked": "isWhatsapp" }
+  ],
+  "contactEmail": "team@awhbharat.org"
+}
