@@ -12,7 +12,7 @@ const CONFIG = {
   API_BASE: "https://ticketbookingbackend-k2m9.onrender.com",
 
   // Event details
-  EVENT_ID: "DIYGanpati",
+  EVENT_ID: "DIYGANPATI",
   EVENT_NAME: "DIY Ganpati",
   EVENT_DATE: "12th September 2026",
   EVENT_VENUE: "Bansal Plaza, Bhopal",

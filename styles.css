@@ -1581,7 +1581,7 @@ p.desc {
   padding: 1.25rem 0;
   background: none;
   border: none;
-  color: var(--text);
+  /* color: var(--text); */
   font-family: 'Montserrat', sans-serif;
   font-size: 0.95rem;
   cursor: pointer;
@@ -1637,13 +1637,14 @@ p.desc {
   font-family: var(--font-common);
   font-size: 1.5rem;
   /* letter-spacing: 0.1em; */
-  color: var(--text);
+  /* color: var(--text); */
 }
 
 .footer-links {
   display: flex;
   gap: 2rem;
   align-items: flex-start;
+  color: #ffffff;
   /* Keeps Privacy/Terms aligned with the top of 'Contact' */
 }
 
@@ -1665,7 +1666,7 @@ p.desc {
 /* Existing link styles */
 .footer-links a {
   font-size: 0.82rem;
-  color: var(--text);
+  /* color: var(--text); */
   text-decoration: none;
   transition: color 0.2s;
 }
@@ -1688,7 +1689,7 @@ p.desc {
 
 .footer-copy {
   font-size: 0.78rem;
-  color: var(--text);
+  /* color: var(--text); */
 }
 
 /* ─── Toast ──────────────────────────────────────────────────────── */
