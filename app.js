@@ -44,15 +44,48 @@ function showToast(msg, type = "info") {
 }
 
 /* ── Ticket Types ─────────────────────────────────────── */
+// Render cold starts can take 30–60s and often return 502/503/504 or a
+// network error before the service is ready. Keep the loading UI and
+// retry; only show "Tickets Unavailable" after a definitive failure.
+function isTransientStartupStatus(status) {
+  return status === 500 || status === 502 || status === 503 || status === 504;
+}
+
+async function fetchWithStartupRetry(url, options) {
+  const maxAttempts = 8;
+  const retryDelayMs = 4000;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const res = await fetch(url, options);
+      if (isTransientStartupStatus(res.status) && attempt < maxAttempts) {
+        await new Promise((resolve) => setTimeout(resolve, retryDelayMs));
+        continue;
+      }
+      return res;
+    } catch (err) {
+      if (attempt < maxAttempts) {
+        await new Promise((resolve) => setTimeout(resolve, retryDelayMs));
+        continue;
+      }
+      throw err;
+    }
+  }
+}
+
 async function loadTicketTypes() {
   state.ticketTypesLoading = true;
+  const loadingEl = $("ticket-types-loading");
+  // Keep loading visible until this request settles. Do not hide existing
+  // cards on a sold-out refresh (types were already loaded once).
+  if (loadingEl && !state.ticketTypesLoaded) loadingEl.style.display = "";
   updatePriceDisplay();
   try {
-    const res = await fetch(`${CONFIG.API_BASE}/api/events/${CONFIG.EVENT_ID}/ticket-types`);
+    const res = await fetchWithStartupRetry(`${CONFIG.API_BASE}/api/events/${CONFIG.EVENT_ID}/ticket-types`);
     if (!res.ok) throw new Error("Failed to load");
     const data = await res.json();
 
-    $("ticket-types-loading").style.display = "none";
+    if (loadingEl) loadingEl.style.display = "none";
     state.ticketTypesLoading = false;
 
     if (!data.ticketTypes || data.ticketTypes.length === 0) {
@@ -63,7 +96,7 @@ async function loadTicketTypes() {
     state.ticketTypesLoaded = true;
     renderTicketTypeCards(data.ticketTypes);
   } catch (_) {
-    $("ticket-types-loading").style.display = "none";
+    if (loadingEl) loadingEl.style.display = "none";
     state.ticketTypesLoading = false;
     showTicketTypeError("Failed to load ticket options. Please refresh the page.");
   }
@@ -319,7 +352,7 @@ function calculatePlatformFee(amountAfterCoupon) {
 /* ── Event Config ─────────────────────────────────────── */
 async function loadEventConfig() {
   try {
-    const res = await fetch(`${CONFIG.API_BASE}/api/events/${CONFIG.EVENT_ID}/config`);
+    const res = await fetchWithStartupRetry(`${CONFIG.API_BASE}/api/events/${CONFIG.EVENT_ID}/config`);
     if (!res.ok) return;
     const data = await res.json();
     if (data.config) {

@@ -803,7 +803,7 @@
           <!-- Ticket type cards (populated by app.js from API) -->
           <div id="ticket-types-loading"
             style="text-align:center;padding:1rem 0;color:#9CA3AF;font-family:'Montserrat',sans-serif;font-size:0.85rem;">
-            Loading ticket options...
+            Loading ticket options… this can take a moment
           </div>
           <div id="ticket-type-cards" style="display:none;display:flex;flex-direction:column;gap:0.75rem;"></div>
           <!-- Fallback label shown when no types are configured in Firestore -->
@@ -891,8 +891,8 @@
 
         <div id="pay-error" class="pay-error hidden"></div>
 
-        <button class="pay-btn" id="pay-btn" style="width:100%;margin-top:1.5rem;">
-          <span id="pay-btn-text">Pay ₹250 Securely</span>
+        <button class="pay-btn" id="pay-btn" style="width:100%;margin-top:1.5rem;" disabled>
+          <span id="pay-btn-text">Loading Tickets...</span>
           <div class="pay-spinner hidden" id="pay-spinner"></div>
         </button>
 
