@@ -128,9 +128,9 @@ function createTicketCard(ticket, index, total) {
 
   ticketDiv.innerHTML = `
     <div class="ticket-left">
-      <div class="ticket-event-name">EcoFriendly Ganpati Making Workshop</div>
+      <div class="ticket-event-name">Navratri Workshop</div>
       <div class="ticket-event-year">2026</div>
-      <div class="ticket-date">12 September 2026</div>
+      <div class="ticket-date">11 October 2026</div>
       <div class="ticket-venue">Bansal Plaza</div>
 
       <div class="ticket-divider">
@@ -272,7 +272,7 @@ $("download-btn").addEventListener("click", async () => {
       if (window.html2canvas) {
         const canvas = await html2canvas(ticketEls[i], { backgroundColor: "#0f1217", scale: 2 });
         const link = document.createElement("a");
-        link.download = `DIYGanpati-ticket-${ticketIds[i] || i + 1}.png`;
+        link.download = `NavratriWorkshop-ticket-${ticketIds[i] || i + 1}.png`;
         link.href = canvas.toDataURL("image/png");
         link.click();
         // Small delay between downloads

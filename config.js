@@ -12,11 +12,11 @@ const CONFIG = {
   API_BASE: "https://ticketbookingbackend-k2m9.onrender.com",
 
   // Event details
-  EVENT_ID: "DIYGANPATI",
-  EVENT_NAME: "DIY Ganpati",
-  EVENT_DATE: "12th September 2026",
+  EVENT_ID: "NW2026",
+  EVENT_NAME: "Navratri Workshop",
+  EVENT_DATE: "11th October 2026",
   EVENT_VENUE: "Bansal Plaza, Bhopal",
 
   // Ticket price in INR
-  TICKET_PRICE: 350,
+  TICKET_PRICE: 250,
 };
