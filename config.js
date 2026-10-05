@@ -13,7 +13,7 @@ const CONFIG = {
 
   // Event details
   EVENT_ID: "NW2026",
-  EVENT_NAME: "Navratri Workshop",
+  EVENT_NAME: "Navratri Nostalgia",
   EVENT_DATE: "11th October 2026",
   EVENT_VENUE: "Bansal Plaza, Bhopal",
 
