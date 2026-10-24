@@ -130,7 +130,7 @@ function createTicketCard(ticket, index, total) {
     <div class="ticket-left">
       <div class="ticket-event-name">${ticket.eventName || CONFIG.EVENT_NAME}</div>
       <div class="ticket-event-year">2026</div>
-      <div class="ticket-date">${ticket.eventDate || "1st October 2026"}</div>
+      <div class="ticket-date">${ticket.eventDate || "1st November 2026"}</div>
       <div class="ticket-venue">${ticket.eventVenue || CONFIG.EVENT_VENUE}</div>
 
       <div class="ticket-divider">
