@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════
-   app.js — Booking Page Logic (Single-Step)
+   app.js - Booking Page Logic (Single-Step)
    ═══════════════════════════════════════════════════════ */
 
 const $ = (id) => document.getElementById(id);
@@ -12,7 +12,7 @@ const state = {
   quantity: 1,
   coupon: null,
   needYogaMat: false,
-  // Selected ticket type (required — no fallback)
+  // Selected ticket type (required - no fallback)
   selectedTicketType: null,
   ticketTypesLoaded: false,
   ticketTypesLoading: true,
@@ -324,7 +324,7 @@ function showCouponApplied(coupon, pricing) {
     free: "100% FREE",
     bogo: "BUY 1 GET 1 FREE",
   };
-  $("coupon-applied-title").textContent = `${coupon.code} — ${typeLabels[coupon.type] || "DISCOUNT"}`;
+  $("coupon-applied-title").textContent = `${coupon.code} - ${typeLabels[coupon.type] || "DISCOUNT"}`;
   $("coupon-applied-desc").textContent = coupon.description || "";
   $("coupon-applied-savings").textContent =
     pricing.bogoExtra ? "+1 Free Ticket" : `−₹${pricing.discountAmount}`;
@@ -368,7 +368,7 @@ function applyPublicEventDetails(config) {
 
   const titleEl = $("event-title");
   if (titleEl) titleEl.textContent = name;
-  document.title = `${name} — Tickets`;
+  document.title = `${name} - Tickets`;
 
   const dateLine = $("event-date-line");
   if (dateLine) {
@@ -563,7 +563,7 @@ function validateForm() {
     if ($("whatsapp")) $("whatsapp").classList.remove("error");
   }
 
-  // Require a ticket type selection — no fallback
+  // Require a ticket type selection - no fallback
   if (!state.selectedTicketType) {
     showToast("Please select a ticket type", "error");
     ok = false;
@@ -632,7 +632,7 @@ async function initiatePayment() {
     if (!orderRes.ok) {
       // Sold-out: re-fetch types so card reflects new state
       if (orderData.soldOut) {
-        showToast("Ticket type just sold out — please choose another", "error");
+        showToast("Ticket type just sold out - please choose another", "error");
         loadTicketTypes();
       }
       throw new Error(orderData.error || "Failed to create order");
@@ -654,7 +654,7 @@ async function initiatePayment() {
       amount: orderData.amount,
       currency: orderData.currency || "INR",
       name: state.eventName || CONFIG.EVENT_NAME,
-      description: `${state.quantity} ${state.selectedTicketType.label}${state.quantity > 1 ? "s" : ""} — ${state.eventDate || CONFIG.EVENT_DATE}`,
+      description: `${state.quantity} ${state.selectedTicketType.label}${state.quantity > 1 ? "s" : ""} - ${state.eventDate || CONFIG.EVENT_DATE}`,
       prefill: {
         name: state.name,
         email: state.email,

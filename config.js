@@ -1,6 +1,6 @@
 /**
  * ╔══════════════════════════════════════════════╗
- * ║   PIY 2026 — Frontend Configuration        ║
+ * ║   PIY 2026  Frontend Configuration        ║
  * ║   Edit this file with your event details     ║
  * ╚══════════════════════════════════════════════╝
  */
@@ -19,7 +19,7 @@ const CONFIG = {
   EVENT_DATE: "1st October 2026 | 4:00 PM - 6:00 PM",
   EVENT_VENUE: "Bansal Plaza, Bhopal",
   EVENT_DESCRIPTION:
-    "Unleash your inner artist — hand-paint your own canvas tote bag with vibrant colors, fruit motifs, and playful designs. All materials provided.",
+    "Unleash your inner artist  hand-paint your own canvas tote bag with vibrant colors, fruit motifs, and playful designs. All materials provided.",
 
   // Ticket price in INR
   TICKET_PRICE: 250,

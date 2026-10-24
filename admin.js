@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════
-   admin.js — Gate Dashboard + Coupon Manager
+   admin.js - Gate Dashboard + Coupon Manager
    ═══════════════════════════════════════════════════════ */
 
 const $ = (id) => document.getElementById(id);
@@ -80,9 +80,9 @@ document.querySelectorAll(".admin-tab").forEach((tab) => {
 // ─── Stats ────────────────────────────────────────────────────────
 function updateStats(stats) {
   if (!stats) return;
-  $("stat-total").textContent = stats.total ?? "—";
-  $("stat-unused").textContent = stats.unused ?? "—";
-  $("stat-used").textContent = stats.used ?? "—";
+  $("stat-total").textContent = stats.total ?? "-";
+  $("stat-unused").textContent = stats.unused ?? "-";
+  $("stat-used").textContent = stats.used ?? "-";
 }
 
 // ─── Load Attendees ───────────────────────────────────────────────
@@ -108,9 +108,9 @@ function renderAttendeeTable(tickets) {
       <td>${t.ticketId}</td>
       <td style="color:var(--text)">${t.name}</td>
       <td>${t.phone}</td>
-      <td>${t.ticketTypeLabel ? `<span class="type-pill">${t.ticketTypeLabel}</span>` : "—"}</td>
+      <td>${t.ticketTypeLabel ? `<span class="type-pill">${t.ticketTypeLabel}</span>` : "-"}</td>
       <td>₹${t.amount}${t.discountAmount > 0 ? `<br/><small style="color:var(--green)">−₹${t.discountAmount}</small>` : ""}</td>
-      <td>${t.coupon ? `<span class="type-pill ${t.coupon.type}">${t.coupon.code}</span>` : "—"}</td>
+      <td>${t.coupon ? `<span class="type-pill ${t.coupon.type}">${t.coupon.code}</span>` : "-"}</td>
       <td>${formatDate(t.createdAt)}</td>
       <td><span class="status-pill ${t.isUsed ? "used" : "unused"}">${t.isUsed ? "CHECKED IN" : "PENDING"}</span></td>
     </tr>`).join("");
@@ -198,7 +198,7 @@ function showInvalidResult(data) {
   const reasons = {
     TICKET_NOT_FOUND: "Ticket does not exist",
     WRONG_EVENT: "Ticket is for a different event",
-    ALREADY_USED: "Ticket already used — DENY ENTRY",
+    ALREADY_USED: "Ticket already used - DENY ENTRY",
   };
   $("invalid-reason").textContent = reasons[data.reason] || data.message || "Invalid ticket";
   $("invalid-detail").textContent = data.ticket?.usedAt ? `Used at: ${formatDate(data.ticket.usedAt)}` : "";
@@ -242,7 +242,7 @@ async function loadTicketTypes() {
       renderTicketTypeTable(data.ticketTypes);
       renderCouponTicketTypeCheckboxes(cachedTicketTypes);
     } else {
-      // Backend may not have this route yet (e.g. production not deployed) — show empty state gracefully
+      // Backend may not have this route yet (e.g. production not deployed) - show empty state gracefully
       renderTicketTypeTable([]);
       renderCouponTicketTypeCheckboxes([]);
     }
@@ -275,7 +275,7 @@ function renderTicketTypeTable(types) {
       <td style="font-weight:600;color:var(--text)">${t.label}</td>
       <td>₹${t.price}</td>
       <td>${capacityDisplay}${soldOutBadge}</td>
-      <td style="color:var(--text-muted);font-size:0.78rem;max-width:180px">${t.description || "—"}</td>
+      <td style="color:var(--text-muted);font-size:0.78rem;max-width:180px">${t.description || "-"}</td>
       <td>
         ${t.active
         ? `<span class="active-pill">● Active</span>`
@@ -313,7 +313,7 @@ $("create-tt-btn").addEventListener("click", async () => {
   try {
     let res;
     if (isEdit) {
-      // Edit mode — PATCH (id and soldCount cannot be changed)
+      // Edit mode - PATCH (id and soldCount cannot be changed)
       res = await fetch(
         `${CONFIG.API_BASE}/api/events/${eventId}/ticket-types/${editingTicketTypeId}`,
         {
@@ -323,7 +323,7 @@ $("create-tt-btn").addEventListener("click", async () => {
         }
       );
     } else {
-      // Create mode — POST
+      // Create mode - POST
       if (!id) { showToast("ID (slug) is required", "error"); btn.textContent = "+ Create Ticket Type"; btn.disabled = false; return; }
       res = await fetch(
         `${CONFIG.API_BASE}/api/events/${eventId}/ticket-types`,
@@ -499,7 +499,7 @@ function renderCouponTable(coupons) {
       <td>${valueDisplay}</td>
       <td>${c.usedCount}${c.maxUses !== null ? ` / ${c.maxUses}` : " / ∞"}</td>
       <td>${c.validUntil ? formatDate(c.validUntil) : "No expiry"}</td>
-      <td style="color:var(--text-muted);font-size:0.78rem;max-width:160px">${c.description || "—"}</td>
+      <td style="color:var(--text-muted);font-size:0.78rem;max-width:160px">${c.description || "-"}</td>
       <td style="max-width:140px">${ticketTypeDisplay}</td>
       <td>
         ${expired ? `<span style="color:var(--red);font-size:0.72rem">EXPIRED</span>`

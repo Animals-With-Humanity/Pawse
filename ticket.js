@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════
-   ticket.js — Multi-Ticket Display Page
+   ticket.js - Multi-Ticket Display Page
    Shows all tickets with individual QR codes, download all
    ═══════════════════════════════════════════════════════ */
 
@@ -106,7 +106,7 @@ function createTicketCard(ticket, index, total) {
   let couponBadgeHTML = "";
   if (ticket.coupon) {
     const typeLabel = { percent: `${ticket.coupon.value}% OFF`, flat: `₹${ticket.coupon.value} OFF`, free: "FREE", bogo: "BOGO" };
-    couponBadgeHTML = `<div class="ticket-coupon-badge">🏷️ ${ticket.coupon.code} — ${typeLabel[ticket.coupon.type] || "DISCOUNT"}</div>`;
+    couponBadgeHTML = `<div class="ticket-coupon-badge">🏷️ ${ticket.coupon.code} - ${typeLabel[ticket.coupon.type] || "DISCOUNT"}</div>`;
     if (ticket.discountAmount > 0 && index === 0) {
       couponBadgeHTML += `<div class="ticket-savings-line">You saved ₹${ticket.discountAmount}</div>`;
     }
