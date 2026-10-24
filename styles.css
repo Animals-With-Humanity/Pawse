@@ -1,19 +1,19 @@
 /* ─── Variables ─────────────────────────────────────────────-────── */
 :root {
-  /* ── Tote Bag Painting / arts workshop theme ── */
-  --bg: #1f1410;
-  --surface: rgba(255, 255, 255, 0.18);
-  --surface-2: rgba(255, 255, 255, 0.22);
+  /* ── Halloween × Tote Bag Painting theme ── */
+  --bg: #0a0514;
+  --surface: rgba(255, 255, 255, 0.12);
+  --surface-2: rgba(255, 255, 255, 0.16);
   --surface-3: rgba(255, 255, 255, 0.08);
-  --border: rgba(255, 255, 255, 0.35);
-  --border-bright: rgba(255, 255, 255, 0.6);
-  --accent: #E67E22;
-  --accent-2: #F1C40F;
-  --accent-dim: rgba(230, 126, 34, 0.18);
-  --accent-glow: rgba(241, 196, 15, 0.4);
-  --red: #C0392B;
-  --green: #27AE60;
-  --orange: #E67E22;
+  --border: rgba(199, 125, 255, 0.35);
+  --border-bright: rgba(255, 159, 28, 0.55);
+  --accent: #ff7518;
+  --accent-2: #c77dff;
+  --accent-dim: rgba(255, 117, 24, 0.2);
+  --accent-glow: rgba(199, 125, 255, 0.45);
+  --red: #ff4444;
+  --green: #9ef01a;
+  --orange: #ff9f1c;
   --text: #374151;
   --text-muted: rgba(255, 255, 255, 0.82);
   --text-dim: rgba(255, 255, 255, 0.6);
@@ -56,7 +56,7 @@ body {
 
 
 
-/* Workshop photo as a full-bleed backdrop. */
+/* Halloween workshop photo as a full-bleed backdrop. */
 body::before,
 body::after {
   content: "";
@@ -75,20 +75,20 @@ body::after {
 body::before {
   z-index: -2;
   background-image:
-    radial-gradient(ellipse 70% 50% at 50% 18%, rgba(192, 57, 43, 0.28) 0%, transparent 70%),
-    radial-gradient(ellipse 55% 45% at 80% 80%, rgba(39, 174, 96, 0.18) 0%, transparent 65%),
-    linear-gradient(180deg, #2c2419 0%, #1f1410 52%, #14100c 100%);
+    radial-gradient(ellipse 65% 45% at 50% 12%, rgba(199, 125, 255, 0.35) 0%, transparent 68%),
+    radial-gradient(ellipse 50% 40% at 85% 75%, rgba(255, 117, 24, 0.28) 0%, transparent 62%),
+    linear-gradient(180deg, #12081f 0%, #0a0514 55%, #050208 100%);
 }
 
 body::after {
   background-image:
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.72) 0%,
-      rgba(255, 255, 255, 0.35) 38%,
-      rgba(31, 20, 16, 0.55) 100%
+      rgba(10, 5, 20, 0.82) 0%,
+      rgba(10, 5, 20, 0.55) 42%,
+      rgba(10, 5, 20, 0.88) 100%
     ),
-    url("tote_painting.jpg") ;
+    url("halloween_tote_bg.jpg");
 }
 
 @media (max-width: 768px) {
@@ -96,11 +96,11 @@ body::after {
     background-image:
       linear-gradient(
         180deg,
-        rgba(255, 255, 255, 0.78) 0%,
-        rgba(255, 255, 255, 0.42) 42%,
-        rgba(31, 20, 16, 0.62) 100%
+        rgba(10, 5, 20, 0.88) 0%,
+        rgba(10, 5, 20, 0.62) 45%,
+        rgba(10, 5, 20, 0.92) 100%
       ),
-      url("tote_painting.jpg");
+      url("halloween_tote_bg.jpg");
   }
 }
 
@@ -589,8 +589,8 @@ nav.header-nav {
   font-family: 'DM Sans', sans-serif;
   font-size: 18px;
   line-height: 1.85;
-  color: #2c2419;
-  text-shadow: 0 1px 14px rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.65);
   max-width: 100%;
   margin: 20px auto 0;
   text-align: center;
@@ -910,9 +910,9 @@ nav.header-nav {
 }
 
 .section-title {
-  /* font-family: var(--font-display); */
-  */ font-size: clamp(2.5rem, 4vw, 2rem);
-  /* letter-spacing: 0.04em; */
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  color: #ffffff;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.55), 0 0 40px rgba(199, 125, 255, 0.25);
   margin-bottom: 1rem;
 }
 
@@ -1570,7 +1570,7 @@ p.desc {
   padding: 1.25rem 0;
   background: none;
   border: none;
-  /* color: var(--text); */
+  color: rgba(255, 255, 255, 0.95);
   font-family: 'Montserrat', sans-serif;
   font-size: 0.95rem;
   cursor: pointer;
@@ -1593,7 +1593,7 @@ p.desc {
 .faq-a {
   display: none;
   font-size: 0.88rem;
-  color: var(--text);
+  color: rgba(243, 232, 255, 0.88);
   font-family: 'Montserrat', sans-serif;
   padding-bottom: 1.25rem;
   line-height: 1.7;
@@ -1625,8 +1625,8 @@ p.desc {
 .footer-logo {
   font-family: var(--font-common);
   font-size: 1.5rem;
-  /* letter-spacing: 0.1em; */
-  /* color: var(--text); */
+  color: #ff9f1c;
+  text-shadow: 0 0 24px rgba(199, 125, 255, 0.35);
 }
 
 .footer-links {
@@ -1678,7 +1678,7 @@ p.desc {
 
 .footer-copy {
   font-size: 0.78rem;
-  /* color: var(--text); */
+  color: rgba(243, 232, 255, 0.72);
 }
 
 /* ─── Toast ──────────────────────────────────────────────────────── */
