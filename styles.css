@@ -1,19 +1,19 @@
 /* ─── Variables ─────────────────────────────────────────────-────── */
 :root {
-  /* ── Navratri Theme ── */
-  --bg: #1a0612;
+  /* ── Tote Bag Painting / arts workshop theme ── */
+  --bg: #1f1410;
   --surface: rgba(255, 255, 255, 0.18);
   --surface-2: rgba(255, 255, 255, 0.22);
   --surface-3: rgba(255, 255, 255, 0.08);
   --border: rgba(255, 255, 255, 0.35);
   --border-bright: rgba(255, 255, 255, 0.6);
-  --accent: #E85D04;
-  --accent-2: #FFD166;
-  --accent-dim: rgba(232, 93, 4, 0.18);
-  --accent-glow: rgba(255, 209, 102, 0.45);
-  --red: #C1121F;
-  --green: #FFD166;
-  --orange: #FF7D22;
+  --accent: #E67E22;
+  --accent-2: #F1C40F;
+  --accent-dim: rgba(230, 126, 34, 0.18);
+  --accent-glow: rgba(241, 196, 15, 0.4);
+  --red: #C0392B;
+  --green: #27AE60;
+  --orange: #E67E22;
   --text: #374151;
   --text-muted: rgba(255, 255, 255, 0.82);
   --text-dim: rgba(255, 255, 255, 0.6);
@@ -56,7 +56,7 @@ body {
 
 
 
-/* Navratri canopy photo as a full-bleed festive backdrop. */
+/* Workshop photo as a full-bleed backdrop. */
 body::before,
 body::after {
   content: "";
@@ -75,22 +75,32 @@ body::after {
 body::before {
   z-index: -2;
   background-image:
-    radial-gradient(ellipse 70% 50% at 50% 18%, rgba(196, 30, 58, 0.38) 0%, transparent 70%),
-    radial-gradient(ellipse 55% 45% at 80% 80%, rgba(232, 93, 4, 0.22) 0%, transparent 65%),
-    linear-gradient(180deg, #1a0612 0%, #120810 52%, #0a0610 100%);
+    radial-gradient(ellipse 70% 50% at 50% 18%, rgba(192, 57, 43, 0.28) 0%, transparent 70%),
+    radial-gradient(ellipse 55% 45% at 80% 80%, rgba(39, 174, 96, 0.18) 0%, transparent 65%),
+    linear-gradient(180deg, #2c2419 0%, #1f1410 52%, #14100c 100%);
 }
 
 body::after {
   background-image:
-    linear-gradient(rgba(18, 6, 14, 0.32), rgba(12, 4, 10, 0.58)),
-    url("navratri_1.jpg");
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.72) 0%,
+      rgba(255, 255, 255, 0.35) 38%,
+      rgba(31, 20, 16, 0.55) 100%
+    ),
+    url("tote_painting.jpg") ;
 }
 
 @media (max-width: 768px) {
   body::after {
     background-image:
-      linear-gradient(rgba(18, 6, 14, 0.42), rgba(12, 4, 10, 0.64)),
-      url("navratri.jpg");
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.78) 0%,
+        rgba(255, 255, 255, 0.42) 42%,
+        rgba(31, 20, 16, 0.62) 100%
+      ),
+      url("tote_painting.jpg");
   }
 }
 
@@ -579,7 +589,8 @@ nav.header-nav {
   font-family: 'DM Sans', sans-serif;
   font-size: 18px;
   line-height: 1.85;
-  color: rgba(255, 255, 255, 0.9);
+  color: #2c2419;
+  text-shadow: 0 1px 14px rgba(255, 255, 255, 0.85);
   max-width: 100%;
   margin: 20px auto 0;
   text-align: center;
@@ -1449,7 +1460,7 @@ p.desc {
 }
 
 .info-card-title {
-  color: #ffffff;
+  color: #000000;
   font-size: 2rem;
   text-transform: uppercase;
   font-weight: 900;
@@ -1482,7 +1493,7 @@ p.desc {
 
 .info-detail-title {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(0, 0, 0, 0.7);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin-bottom: 0.2rem;
@@ -1505,7 +1516,7 @@ p.desc {
   align-items: flex-start;
   padding: 0.5rem 0;
   font-size: 0.88rem;
-  color: #ffffff;
+  color: #000000;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -1514,7 +1525,7 @@ p.desc {
 }
 
 .perk-check {
-  color: var(--green);
+  color: #000000;
   font-weight: 700;
   flex-shrink: 0;
 }
@@ -3386,6 +3397,8 @@ p.desc {
 .ticket-card-actions {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin-top: 0.75rem;
 }
 

@@ -55,6 +55,7 @@ function showDashboard() {
   loadCoupons();
   loadTicketTypes();
   loadEventSettings();
+  loadPhotoGallery();
 }
 
 $("logout-btn").addEventListener("click", () => {
@@ -652,6 +653,12 @@ function applyEventConfigToUI(config) {
   $("es-gst-percent").value = config.platformFeeGstPercent ?? 0;
 
   updateFeePreview(feeType, config.platformFee, config.platformFeeGstPercent);
+
+  if ($("ev-name")) $("ev-name").value = config.name || "";
+  if ($("ev-date")) $("ev-date").value = config.dateLabel || "";
+  if ($("ev-venue")) $("ev-venue").value = config.venue || "";
+  if ($("ev-description")) $("ev-description").value = config.description || "";
+  if ($("ev-map")) $("ev-map").value = config.mapUrl || "";
 }
 
 function syncFeeTypeLabels(feeType) {
@@ -772,6 +779,87 @@ $("toggle-event-active-btn").addEventListener("click", async () => {
   } catch (err) {
     showToast(err.message, "error");
   } finally {
+    btn.disabled = false;
+  }
+});
+
+$("save-event-details-btn").addEventListener("click", async () => {
+  const body = {
+    name: $("ev-name").value,
+    dateLabel: $("ev-date").value,
+    venue: $("ev-venue").value,
+    description: $("ev-description").value,
+    mapUrl: $("ev-map").value.trim(),
+  };
+
+  const btn = $("save-event-details-btn");
+  btn.textContent = "Saving...";
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(`${CONFIG.API_BASE}/api/events/${eventId}/config`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to save");
+    Object.assign(currentEventConfig, body);
+    showToast("Event details saved", "success");
+  } catch (err) {
+    showToast(err.message, "error");
+  } finally {
+    btn.textContent = "Save Event Details";
+    btn.disabled = false;
+  }
+});
+
+async function loadPhotoGallery() {
+  const status = $("pg-status");
+  if (!$("pg-folder")) return;
+  try {
+    const res = await fetch(`${CONFIG.API_BASE}/api/event-photos/admin/${eventId}`, {
+      headers: { Authorization: `Bearer ${adminToken}` },
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to load gallery");
+    const gallery = data.gallery;
+    $("pg-title").value = gallery?.title || "";
+    $("pg-folder").value = gallery?.driveFolderId || "";
+    $("pg-published").checked = gallery?.published === true;
+    if (status) {
+      status.textContent = gallery
+        ? (gallery.published ? "Gallery is saved and published." : "Gallery is saved but not published.")
+        : "No photo folder connected yet.";
+    }
+  } catch (err) {
+    if (status) status.textContent = err.message;
+  }
+}
+
+$("save-photo-gallery-btn").addEventListener("click", async () => {
+  const btn = $("save-photo-gallery-btn");
+  btn.textContent = "Saving...";
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(`${CONFIG.API_BASE}/api/event-photos/admin/${eventId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` },
+      body: JSON.stringify({
+        title: $("pg-title").value.trim(),
+        driveFolderId: $("pg-folder").value.trim(),
+        published: $("pg-published").checked,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to save gallery");
+    showToast("Photo gallery saved", "success");
+    await loadPhotoGallery();
+  } catch (err) {
+    showToast(err.message, "error");
+  } finally {
+    btn.textContent = "Save Photo Gallery";
     btn.disabled = false;
   }
 });

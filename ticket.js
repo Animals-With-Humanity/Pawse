@@ -128,10 +128,10 @@ function createTicketCard(ticket, index, total) {
 
   ticketDiv.innerHTML = `
     <div class="ticket-left">
-      <div class="ticket-event-name">Navratri Nostalgia</div>
+      <div class="ticket-event-name">${ticket.eventName || CONFIG.EVENT_NAME}</div>
       <div class="ticket-event-year">2026</div>
-      <div class="ticket-date">11 October 2026</div>
-      <div class="ticket-venue">Bansal Plaza</div>
+      <div class="ticket-date">${ticket.eventDate || "1st October 2026"}</div>
+      <div class="ticket-venue">${ticket.eventVenue || CONFIG.EVENT_VENUE}</div>
 
       <div class="ticket-divider">
         <div class="ticket-notch left-notch"></div>
@@ -174,6 +174,7 @@ function createTicketCard(ticket, index, total) {
       </svg>
       Download Ticket ${total > 1 ? (index + 1) : ""}
     </button>
+    <a class="ticket-action-btn" style="text-decoration:none" href="${CONFIG.PHOTO_GALLERY_URL}#ticket=${encodeURIComponent(ticket.ticketId)}" target="_blank" rel="noopener noreferrer">View event photos</a>
   `;
   wrapper.appendChild(actions);
 
@@ -272,7 +273,7 @@ $("download-btn").addEventListener("click", async () => {
       if (window.html2canvas) {
         const canvas = await html2canvas(ticketEls[i], { backgroundColor: "#0f1217", scale: 2 });
         const link = document.createElement("a");
-        link.download = `NavratriNostalgia-ticket-${ticketIds[i] || i + 1}.png`;
+        link.download = `ToteBagPainting-ticket-${ticketIds[i] || i + 1}.png`;
         link.href = canvas.toDataURL("image/png");
         link.click();
         // Small delay between downloads

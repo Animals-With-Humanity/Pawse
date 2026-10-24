@@ -488,6 +488,87 @@
           <div id="es-preview" style="margin-top:1rem;font-size:0.82rem;color:var(--text-muted)"></div>
         </div>
 
+        <div class="create-coupon-form" style="margin-top:1.5rem">
+          <h3>📝 Booking Page Details</h3>
+          <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1.25rem">
+            Shown on the public ticket page for this event id. Leave blank to keep the built-in text for the default event.
+          </p>
+          <div class="form-grid">
+            <div class="field-group">
+              <label class="field-label">Event name</label>
+              <div class="field-wrap">
+                <input type="text" id="ev-name" class="field-input" maxlength="120" placeholder="e.g. Navratri Nostalgia" />
+                <div class="field-border"></div>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Date and time</label>
+              <div class="field-wrap">
+                <input type="text" id="ev-date" class="field-input" maxlength="160" placeholder="e.g. 11 October 2026, 4:00–6:00 PM" />
+                <div class="field-border"></div>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Venue</label>
+              <div class="field-wrap">
+                <input type="text" id="ev-venue" class="field-input" maxlength="160" placeholder="e.g. Bansal Plaza, Bhopal" />
+                <div class="field-border"></div>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Map link</label>
+              <div class="field-wrap">
+                <input type="url" id="ev-map" class="field-input" maxlength="500" placeholder="https://maps.app.goo.gl/..." />
+                <div class="field-border"></div>
+              </div>
+            </div>
+            <div class="field-group" style="grid-column:1/-1">
+              <label class="field-label">Short description</label>
+              <div class="field-wrap">
+                <input type="text" id="ev-description" class="field-input" maxlength="500" placeholder="One line shown under the event title" />
+                <div class="field-border"></div>
+              </div>
+            </div>
+          </div>
+          <div class="create-form-actions" style="margin-top:1rem">
+            <button class="create-submit-btn" id="save-event-details-btn" type="button">Save Event Details</button>
+          </div>
+        </div>
+
+        <div class="create-coupon-form" style="margin-top:1.5rem">
+          <h3>📷 Event Photos</h3>
+          <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1.25rem">
+            Paste the private Google Drive folder id for this event. Only people with a paid ticket can open the photos.
+            Leave unpublished until the pictures are ready.
+          </p>
+          <div class="form-grid">
+            <div class="field-group">
+              <label class="field-label">Gallery title</label>
+              <div class="field-wrap">
+                <input type="text" id="pg-title" class="field-input" maxlength="120" placeholder="e.g. Navratri Nostalgia" />
+                <div class="field-border"></div>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Drive folder id</label>
+              <div class="field-wrap">
+                <input type="text" id="pg-folder" class="field-input" maxlength="128" placeholder="From the folder URL" />
+                <div class="field-border"></div>
+              </div>
+            </div>
+            <div class="field-group" style="grid-column:1/-1">
+              <label class="field-label" style="display:flex;align-items:center;gap:0.5rem">
+                <input type="checkbox" id="pg-published" />
+                Published — ticket holders can view these photos
+              </label>
+            </div>
+          </div>
+          <div class="create-form-actions" style="margin-top:1rem">
+            <button class="create-submit-btn" id="save-photo-gallery-btn" type="button">Save Photo Gallery</button>
+          </div>
+          <div id="pg-status" style="margin-top:0.75rem;font-size:0.82rem;color:var(--text-muted)"></div>
+        </div>
+
       </div>
 
     </main>

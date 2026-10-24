@@ -33,6 +33,9 @@ const state = {
     platformFeeGstPercent: 0,
     isActive: true,
   },
+  eventName: CONFIG.EVENT_NAME,
+  eventDate: CONFIG.EVENT_DATE,
+  eventVenue: CONFIG.EVENT_VENUE,
 };
 
 /* ── Toast ────────────────────────────────────────────── */
@@ -350,13 +353,59 @@ function calculatePlatformFee(amountAfterCoupon) {
 }
 
 /* ── Event Config ─────────────────────────────────────── */
+function applyPublicEventDetails(config) {
+  const isKnownDefault = CONFIG.EVENT_ID === CONFIG.DEFAULT_EVENT_ID;
+  const name = (config.name || "").trim() || (isKnownDefault ? CONFIG.EVENT_NAME : CONFIG.EVENT_ID);
+  const dateLabel = (config.dateLabel || "").trim() || (isKnownDefault ? CONFIG.EVENT_DATE : "");
+  const venue = (config.venue || "").trim() || (isKnownDefault ? CONFIG.EVENT_VENUE : "");
+  const description =
+    (config.description || "").trim() ||
+    (isKnownDefault ? (CONFIG.EVENT_DESCRIPTION || "") : "");
+
+  state.eventName = name;
+  state.eventDate = dateLabel;
+  state.eventVenue = venue;
+
+  const titleEl = $("event-title");
+  if (titleEl) titleEl.textContent = name;
+  document.title = `${name} — Tickets`;
+
+  const dateLine = $("event-date-line");
+  if (dateLine) {
+    const parts = [dateLabel, venue].filter(Boolean);
+    dateLine.textContent = parts.join(" | ") || "Animals With Humanity";
+  }
+
+  const desc = $("event-desc");
+  if (desc && (description || !isKnownDefault)) {
+    desc.textContent = description || "Book your ticket for this Animals With Humanity event.";
+  }
+
+  const cardTitle = $("event-card-title");
+  if (cardTitle) cardTitle.textContent = name;
+
+  const cardDate = $("event-card-datetime");
+  if (cardDate) cardDate.textContent = dateLabel || "See event details";
+
+  const cardVenue = $("event-card-venue");
+  if (cardVenue) {
+    cardVenue.textContent = venue || "Venue to be announced";
+    if (config.mapUrl) cardVenue.href = config.mapUrl;
+  }
+
+  const perks = $("event-perks");
+  if (perks && !isKnownDefault) perks.style.display = "none";
+}
+
 async function loadEventConfig() {
+  applyPublicEventDetails({});
   try {
     const res = await fetchWithStartupRetry(`${CONFIG.API_BASE}/api/events/${CONFIG.EVENT_ID}/config`);
     if (!res.ok) return;
     const data = await res.json();
     if (data.config) {
       state.eventConfig = data.config;
+      applyPublicEventDetails(data.config);
       if (!data.config.isActive) {
         showEventClosed();
       }
@@ -604,8 +653,8 @@ async function initiatePayment() {
       order_id: orderData.orderId,
       amount: orderData.amount,
       currency: orderData.currency || "INR",
-      name: CONFIG.EVENT_NAME,
-      description: `${state.quantity} ${state.selectedTicketType.label}${state.quantity > 1 ? "s" : ""} — ${CONFIG.EVENT_DATE}`,
+      name: state.eventName || CONFIG.EVENT_NAME,
+      description: `${state.quantity} ${state.selectedTicketType.label}${state.quantity > 1 ? "s" : ""} — ${state.eventDate || CONFIG.EVENT_DATE}`,
       prefill: {
         name: state.name,
         email: state.email,
