@@ -1,22 +1,27 @@
 /* ─── Variables ─────────────────────────────────────────────-────── */
 :root {
-  /* ── Halloween × Tote Bag Painting theme ── */
-  --bg: #0a0514;
-  --surface: rgba(255, 255, 255, 0.12);
-  --surface-2: rgba(255, 255, 255, 0.16);
-  --surface-3: rgba(255, 255, 255, 0.08);
-  --border: rgba(199, 125, 255, 0.35);
-  --border-bright: rgba(255, 159, 28, 0.55);
-  --accent: #ff7518;
-  --accent-2: #c77dff;
-  --accent-dim: rgba(255, 117, 24, 0.2);
-  --accent-glow: rgba(199, 125, 255, 0.45);
+  /* ── PAWSE / Animals With Humanity ticket theme ── */
+  --bg: #fff9f2;
+  --surface: rgba(255, 255, 255, 0.92);
+  --surface-2: rgba(255, 255, 255, 0.97);
+  --surface-3: rgba(247, 242, 251, 0.95);
+  --border: rgba(122, 39, 169, 0.22);
+  --border-bright: rgba(190, 245, 33, 0.65);
+  --accent: #7a27a9;
+  --accent-2: #f00281;
+  --accent-dim: rgba(122, 39, 169, 0.12);
+  --accent-glow: rgba(190, 245, 33, 0.35);
+  --paw-lime: #bef521;
+  --paw-purple: #7a27a9;
+  --paw-magenta: #f00281;
+  --paw-blue: #0253d1;
+  --brand-dark: #1f2937;
   --red: #ff4444;
   --green: #9ef01a;
   --orange: #ff9f1c;
-  --text: #374151;
-  --text-muted: rgba(255, 255, 255, 0.82);
-  --text-dim: rgba(255, 255, 255, 0.6);
+  --text: #1f2937;
+  --text-muted: #4b5563;
+  --text-dim: #6b7280;
   --font-display: 'Bebas Neue', sans-serif;
   --font-body: 'DM Sans', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -47,7 +52,7 @@ body {
     radial-gradient(ellipse at 20% 30%, rgba(255, 120, 0, 0.5) 0%, transparent 60%),
     radial-gradient(ellipse at 80% 70%, rgba(240, 50, 0, 0.4) 0%, transparent 55%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cpath d='M0 60 Q30 20 60 60 Q90 100 120 60' stroke='rgba(255,255,255,0.07)' stroke-width='3' fill='none'/%3E%3Cpath d='M0 90 Q30 50 60 90 Q90 130 120 90' stroke='rgba(255,255,255,0.05)' stroke-width='2' fill='none'/%3E%3C/svg%3E");  */
-  color: #ffffff;
+  color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
   max-width: 100%;
@@ -75,33 +80,22 @@ body::after {
 body::before {
   z-index: -2;
   background-image:
-    radial-gradient(ellipse 65% 45% at 50% 12%, rgba(199, 125, 255, 0.35) 0%, transparent 68%),
-    radial-gradient(ellipse 50% 40% at 85% 75%, rgba(255, 117, 24, 0.28) 0%, transparent 62%),
-    linear-gradient(180deg, #12081f 0%, #0a0514 55%, #050208 100%);
+    linear-gradient(
+      180deg,
+      rgba(255, 249, 242, 0.9) 0%,
+      rgba(255, 249, 242, 0.86) 42%,
+      rgba(247, 242, 251, 0.94) 100%
+    ),
+    url("assets/pawse/scene.webp");
+  background-position: center top;
+  background-size: cover;
 }
 
 body::after {
   background-image:
-    linear-gradient(
-      180deg,
-      rgba(10, 5, 20, 0.82) 0%,
-      rgba(10, 5, 20, 0.55) 42%,
-      rgba(10, 5, 20, 0.88) 100%
-    ),
-    url("halloween_tote_bg.jpg");
-}
-
-@media (max-width: 768px) {
-  body::after {
-    background-image:
-      linear-gradient(
-        180deg,
-        rgba(10, 5, 20, 0.88) 0%,
-        rgba(10, 5, 20, 0.62) 45%,
-        rgba(10, 5, 20, 0.92) 100%
-      ),
-      url("halloween_tote_bg.jpg");
-  }
+    radial-gradient(circle at 1px 1px, rgba(122, 39, 169, 0.06) 1px, transparent 0);
+  background-size: 28px 28px;
+  opacity: 0.45;
 }
 
 /* ─── Background ─────────────────────────────────────────────────── */
@@ -587,12 +581,12 @@ nav.header-nav {
 
 .hero-desc {
   font-family: 'DM Sans', sans-serif;
-  font-size: 18px;
-  line-height: 1.85;
-  color: rgba(255, 255, 255, 0.92);
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.65);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--text-muted);
+  text-shadow: none;
   max-width: 100%;
-  margin: 20px auto 0;
+  margin: 1.25rem auto 0;
   text-align: center;
 }
 
@@ -911,9 +905,10 @@ nav.header-nav {
 
 .section-title {
   font-size: clamp(1.75rem, 4vw, 2.5rem);
-  color: #ffffff;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.55), 0 0 40px rgba(199, 125, 255, 0.25);
-  margin-bottom: 1rem;
+  color: var(--text);
+  font-weight: 800;
+  text-shadow: none;
+  margin-bottom: 1.5rem;
 }
 
 /* ─── Booking Layout ─────────────────────────────────────────────── */
@@ -1046,9 +1041,9 @@ nav.header-nav {
 }
 
 .field-input:focus {
-  border-color: #F5650A;
+  border-color: #7a27a9;
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(245, 101, 10, 0.1);
+  box-shadow: 0 0 0 3px rgba(122, 39, 169, 0.12);
 }
 
 .field-input::placeholder {
@@ -1414,11 +1409,12 @@ nav.header-nav {
 }
 
 .info-card {
-  background: rgba(255, 255, 255, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: #ffffff;
+  border: 2px solid rgba(122, 39, 169, 0.14);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
-  backdrop-filter: blur(8px);
+  color: var(--text);
+  box-shadow: 0 10px 28px rgba(122, 39, 169, 0.08);
 }
 
 .perks-card {
@@ -1451,7 +1447,7 @@ p.desc {
 }
 
 .info-card-label {
-  color: var(--green);
+  color: var(--paw-purple);
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1460,18 +1456,18 @@ p.desc {
 }
 
 .info-card-title {
-  /* color: #000000; */
-  font-size: 2rem;
-  text-transform: uppercase;
-  font-weight: 900;
-  letter-spacing: 0.06em;
-  margin-bottom: 0.2rem;
+  font-size: 1.65rem;
+  text-transform: none;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.75rem;
+  color: var(--paw-purple);
 }
 
 .alternate {
-  padding-top: 0rem;
+  padding-top: 0;
   position: relative;
-  top: -2rem;
+  top: 0;
 }
 
 .choose {
@@ -1493,16 +1489,18 @@ p.desc {
 
 .info-detail-title {
   font-size: 0.75rem;
-  /* color: rgba(0, 0, 0, 0.7); */
+  color: var(--text-dim);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin-bottom: 0.2rem;
+  font-weight: 600;
 }
 
 .info-detail-val {
   font-size: 0.9rem;
   line-height: 1.5;
-  /* color: var(--green); */
+  color: var(--text);
+  font-weight: 500;
   font-family: 'Yatra One',cursive;
   font-weight: 700;
 }
@@ -1517,8 +1515,8 @@ p.desc {
   align-items: flex-start;
   padding: 0.5rem 0;
   font-size: 0.88rem;
-  /* color: #000000; */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-muted);
+  border-bottom: 1px solid rgba(122, 39, 169, 0.12);
 }
 
 .perk-item:last-child {
@@ -1526,7 +1524,7 @@ p.desc {
 }
 
 .perk-check {
-  color: #000000;
+  color: var(--paw-purple);
   font-weight: 700;
   flex-shrink: 0;
 }
@@ -1571,7 +1569,8 @@ p.desc {
   padding: 1.25rem 0;
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--text);
+  font-weight: 600;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.95rem;
   cursor: pointer;
@@ -1594,7 +1593,7 @@ p.desc {
 .faq-a {
   display: none;
   font-size: 0.88rem;
-  color: rgba(243, 232, 255, 0.88);
+  color: var(--text-muted);
   font-family: 'Montserrat', sans-serif;
   padding-bottom: 1.25rem;
   line-height: 1.7;
@@ -1626,15 +1625,16 @@ p.desc {
 .footer-logo {
   font-family: var(--font-common);
   font-size: 1.5rem;
-  color: #ff9f1c;
-  text-shadow: 0 0 24px rgba(199, 125, 255, 0.35);
+  font-weight: 800;
+  color: var(--paw-purple);
+  text-shadow: none;
 }
 
 .footer-links {
   display: flex;
   gap: 2rem;
   align-items: flex-start;
-  color: #ffffff;
+  color: var(--text-muted);
   /* Keeps Privacy/Terms aligned with the top of 'Contact' */
 }
 
@@ -1668,8 +1668,7 @@ p.desc {
 /* The Yellow Email Style */
 .footer-email {
   font-size: 0.7rem;
-  /* Smaller than the links */
-  color: #ffffff;
+  color: var(--paw-purple);
   /* Bright Gold/Yellow */
   text-transform: none;
   /* Ensures the email stays lowercase */
@@ -1679,7 +1678,7 @@ p.desc {
 
 .footer-copy {
   font-size: 0.78rem;
-  color: rgba(243, 232, 255, 0.72);
+  color: var(--text-dim);
 }
 
 /* ─── Toast ──────────────────────────────────────────────────────── */
@@ -1688,11 +1687,13 @@ p.desc {
   bottom: 2rem;
   right: 2rem;
   z-index: 9999;
-  background: var(--surface-2);
+  background: #ffffff;
   border: 1px solid var(--border-bright);
   border-radius: var(--radius);
   padding: 0.9rem 1.4rem;
   font-size: 0.88rem;
+  color: var(--text);
+  box-shadow: 0 12px 32px rgba(31, 41, 55, 0.12);
   transform: translateY(20px);
   opacity: 0;
   transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);

@@ -86,15 +86,22 @@ function renderAllTickets(tickets) {
   }
 }
 
+function displayHolderName(ticket) {
+  if (ticket.holderName) return ticket.holderName;
+  return String(ticket.name || "").replace(/\s*\(\d+\/\d+\)\s*$/i, "").trim();
+}
+
 function createTicketCard(ticket, index, total) {
   const wrapper = document.createElement("div");
   wrapper.className = "ticket-card-wrapper";
+  const seatIndex = ticket.ticketIndex || index + 1;
+  const seatTotal = ticket.totalTickets || total;
 
   // Ticket label for multi-ticket
-  if (total > 1) {
+  if (seatTotal > 1) {
     const label = document.createElement("div");
     label.className = "ticket-index-label";
-    label.innerHTML = `<span class="til-num">Ticket ${index + 1}</span><span class="til-total">of ${total}</span>`;
+    label.innerHTML = `<span class="til-num">Ticket ${seatIndex}</span><span class="til-total">of ${seatTotal}</span>`;
     wrapper.appendChild(label);
   }
 
@@ -141,7 +148,7 @@ function createTicketCard(ticket, index, total) {
 
       <div class="ticket-holder">
         <div class="ticket-holder-info">
-          <div class="ticket-holder-name">${ticket.name}</div>
+          <div class="ticket-holder-name">${displayHolderName(ticket)}</div>
           <div class="ticket-holder-phone">${ticket.phone}</div>
         </div>
       </div>

@@ -4,11 +4,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PAWSE 2026 - Tote Bag Painting</title>
+  <title>PAWSE — Book tickets | Animals With Humanity</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@400;600;700;800&display=swap"
     rel="stylesheet" />
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <link rel="stylesheet" href="styles.css" />
@@ -57,7 +57,7 @@
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: #9333ea;
+      color: #7a27a9;
       margin-bottom: 1.25rem;
       padding-bottom: 0.5rem;
       border-bottom: 1px solid rgba(147, 51, 234, 0.25);
@@ -161,6 +161,86 @@
       }
     }
 
+    .hero .hero-title {
+      margin-bottom: 1rem;
+    }
+
+    .hero-wordmark {
+      display: block;
+      width: min(520px, 88vw);
+      height: auto;
+      margin: 0 auto;
+    }
+
+    .hero .hero-eyebrow {
+      color: #4b5563;
+    }
+
+    .hero .hero-desc {
+      color: #374151;
+      text-shadow: none;
+    }
+
+    .hero .cta-btn {
+      font-size: 1rem;
+      padding: 0.95rem 1.75rem;
+      border-radius: 9999px;
+    }
+
+    #book .section-label,
+    #FAQ .section-label {
+      color: #7a27a9;
+      font-weight: 700;
+    }
+
+    .choice-row {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-top: 0.35rem;
+    }
+
+    .choice-row input[type="checkbox"],
+    .choice-row input[type="radio"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 1.15rem;
+      height: 1.15rem;
+      margin: 0;
+      flex-shrink: 0;
+      border: 2px solid #7a27a9;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .choice-row input[type="checkbox"] {
+      border-radius: 4px;
+    }
+
+    .choice-row input[type="radio"] {
+      border-radius: 50%;
+    }
+
+    .choice-row input[type="checkbox"]:checked,
+    .choice-row input[type="radio"]:checked {
+      background: #7a27a9;
+      box-shadow: inset 0 0 0 3px #fff;
+    }
+
+    .choice-row label {
+      cursor: pointer;
+      color: #1f2937;
+      font-size: 0.92rem;
+      line-height: 1.35;
+    }
+
+    .stay-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.25rem;
+      margin-top: 0.35rem;
+    }
+
     /* ── Ticket Type Cards ─── */
     .ticket-type-card {
       display: flex;
@@ -177,14 +257,13 @@
     }
 
     .ticket-type-card:hover:not(.sold-out) {
-      border-color: #ff7518;
-      box-shadow: 0 0 0 3px rgba(255, 117, 24, 0.12);
+      border-color: #7a27a9;
+      box-shadow: 0 0 0 3px rgba(122, 39, 169, 0.14);
     }
 
     .ticket-type-card.selected {
-      border-color: #ff7518;
-      /* background: rgba(255, 117, 24, 0.04); */
-      box-shadow: 0 0 0 3px rgba(255, 117, 24, 0.16);
+      border-color: #7a27a9;
+      box-shadow: 0 0 0 3px rgba(122, 39, 169, 0.18);
     }
 
     .ticket-type-card.sold-out {
@@ -214,14 +293,14 @@
     }
 
     .ticket-type-card.selected .ticket-type-radio {
-      border-color: #ff7518;
+      border-color: #7a27a9;
     }
 
     .ticket-type-radio-dot {
       width: 9px;
       height: 9px;
       border-radius: 50%;
-      background: #ff7518;
+      background: #7a27a9;
       display: none;
     }
 
@@ -526,7 +605,7 @@
           </span>
 
           <span
-            style="font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:0.15em;margin-top:3px;">Animals
+            style="font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;color:#7a27a9;text-transform:uppercase;letter-spacing:0.15em;margin-top:3px;">Animals
             With Humanity</span>
         </div>
       </a>
@@ -536,7 +615,7 @@
           style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.875rem;color:var(--text);text-decoration:none;padding:0.5rem 1rem;border-radius:9999px;transition:color 0.2s,background 0.2s;">MY
           TICKETS</a>
         <a href="#book"
-          style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.625rem 1.25rem;background:#ff7518;color:#0a0514;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.875rem;border-radius:9999px;text-decoration:none;box-shadow:0 0 20px rgba(255,117,24,0.35);transition:box-shadow 0.2s,transform 0.2s;">
+          style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.625rem 1.25rem;background:#bef521;color:#1f2937;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.875rem;border-radius:9999px;text-decoration:none;box-shadow:0 0 20px rgba(122,39,169,0.2);transition:box-shadow 0.2s,transform 0.2s;">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
             stroke="none" style="color:white;">
             <path
@@ -569,7 +648,7 @@
         style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.95rem;color:var(--text);text-decoration:none;padding:0.875rem 1rem;border-radius:12px;transition:background 0.2s,color 0.2s;">
         Contact</a>
       <a href="#book" id="mobile-book-btn"
-        style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.875rem 1rem;background:#ff7518;color:#0a0514;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.95rem;border-radius:12px;text-decoration:none;margin-top:0.25rem;box-shadow:0 0 16px rgba(255,117,24,0.3);">
+        style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.875rem 1rem;background:#bef521;color:#1f2937;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.95rem;border-radius:12px;text-decoration:none;margin-top:0.25rem;box-shadow:0 0 16px rgba(122,39,169,0.2);">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
           stroke="none" style="color:#dc2626;">
           <path
@@ -582,27 +661,19 @@
 
   <!-- Hero Section -->
   <section class="hero" style="position:relative;overflow:visible;">
-    <!-- Floating cat decorations -->
-    <!-- <img src="./paw.svg" alt="Party Cat" class="cat-decor cat-1">
-    <img src="./cat2.svg" alt="Party Cat" class="cat-decor cat-2">
-    <img src="./cat3.svg" alt="Party Cat" class="cat-decor cat-3">
-    <img src="./cat4.svg" alt="Party Cat" class="cat-decor cat-4">
-    <img src="./cat5.svg" alt="Party Cat" class="cat-decor cat-5"> -->
-
     <div class="hero-eyebrow">
       <span class="dot"></span>
-      <span class="date-top" id="event-date-line" style="color:#f3e8ff;text-shadow:0 2px 12px rgba(0,0,0,0.7);font-weight:600;">1st October 2026 | 4:00 PM - 6:00 PM | Bansal Plaza, Bhopal</span>
+      <span class="date-top" id="event-date-line">Dates coming soon | Bhopal — venue to be announced</span>
       <span class="dot"></span>
     </div>
-    <h1 class="hero-title" style="font-size: clamp(3rem, 6vw, 4.5rem);">
-      <span class="hero-title-line reveal-up"
-        style="--delay:0.1s;font-family:'Yatra One',cursive;color:#ff9f1c;text-shadow:0 0 32px rgba(199,125,255,0.55),0 4px 24px rgba(0,0,0,0.65);-webkit-text-stroke:1px rgba(60,20,90,0.5);" id="event-title">Tote Bag Painting</span>
+    <h1 class="hero-title reveal-up" style="--delay:0.1s;">
+      <img src="assets/pawse/pawse-wordmark.png" alt="PAWSE" id="event-title" class="hero-wordmark" width="900" height="226" />
     </h1>
     <p class="hero-desc reveal-up" id="event-desc" style="--delay:0.25s;max-width:640px;margin:0 auto 0.5rem;">
-     A spooky-cute Halloween twist on tote bag painting  pumpkins, bats, webs, and bold orange &amp; purple designs. All materials provided.
+      Be kind, to all kinds. A pet-friendly community festival with adoption, vegan food, music, workshops, and more — by Animals With Humanity.
     </p>
     <a href="#book" class="cta-btn reveal-up"
-      style="--delay:0.55s; margin-top: 1rem;background:linear-gradient(135deg,#ff7518 0%,#9333ea 100%);color:#fff;font-weight:800;letter-spacing:0.05em;box-shadow:0 8px 28px rgba(147,51,234,0.4);">
+      style="--delay:0.55s; margin-top: 1rem;background:#bef521;color:#1f2937;font-weight:800;letter-spacing:0.05em;box-shadow:0 8px 28px rgba(122,39,169,0.2);">
       <span>BOOK YOUR TICKETS NOW!!</span>
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
         <path d="M4 10h12M10 4l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
@@ -712,8 +783,8 @@
     -->
   <!-- ═══ Booking Form (single step) ═══ -->
   <section class="booking-section" id="book">
-    <div class="section-label" style="color:#c77dff;"></div>
-    <h2 class="section-title">Secure Your Spot</h2>
+    <div class="section-label" style="color:#7a27a9;">Tickets</div>
+    <h2 class="section-title">Secure your spot</h2>
 
     <div class="booking-layout">
 
@@ -742,7 +813,7 @@
             <span class="field-error" id="email-err"></span>
           </div>
 
-          <div class="field-group">
+          <div class="field-group" style="margin-bottom:0.5rem;">
             <label class="field-label" for="phone">Phone Number</label>
             <div class="field-wrap phone-wrap">
               <span class="phone-prefix">+91</span>
@@ -753,14 +824,12 @@
             <span class="field-error" id="phone-err"></span>
           </div>
 
-          <div class="field-group alternate" style="margin-top:1rem;display:flex;align-items:center;gap:0.5rem;">
-            <input type="checkbox" id="is-whatsapp" checked
-              style="width:1.2rem;height:1.2rem;accent-color:var(--primary);cursor:pointer;" />
-            <label for="is-whatsapp" style="cursor:pointer;color:var(--text)">This mobile number is on
-              WhatsApp</label>
+          <div class="field-group choice-row" style="margin-bottom:1.25rem;">
+            <input type="checkbox" id="is-whatsapp" checked />
+            <label for="is-whatsapp">This mobile number is on WhatsApp</label>
           </div>
 
-          <div class="field-group hidden" id="whatsapp-group" style="margin-top:1rem;">
+          <div class="field-group hidden" id="whatsapp-group">
             <label class="field-label" for="whatsapp">WhatsApp Number (Optional)</label>
             <div class="field-wrap phone-wrap">
               <span class="phone-prefix">+91</span>
@@ -769,6 +838,29 @@
               <div class="field-border"></div>
             </div>
             <span class="field-error" id="whatsapp-err"></span>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="city">Your city</label>
+            <div class="field-wrap">
+              <input type="text" id="city" class="field-input" placeholder="e.g. Bhopal, Indore, Delhi" autocomplete="address-level2" />
+              <div class="field-border"></div>
+            </div>
+            <span class="field-error" id="city-err"></span>
+          </div>
+
+          <div class="field-group" style="margin-bottom:0;">
+            <span class="field-label">Will you require a stay in Bhopal?</span>
+            <div class="stay-options">
+              <div class="choice-row">
+                <input type="radio" name="requireStay" id="stay-yes" value="yes" />
+                <label for="stay-yes">Yes, I may need help with stay</label>
+              </div>
+              <div class="choice-row">
+                <input type="radio" name="requireStay" id="stay-no" value="no" checked />
+                <label for="stay-no">No</label>
+              </div>
+            </div>
           </div>
           <!-- <div class="field-group choose" style="margin-top:1rem;">
             <label class="field-label ">Please Choose</label>
@@ -902,21 +994,21 @@
       <aside class="event-info">
         <div class="info-card">
           <div class="info-card-label">EVENT</div>
-          <div class="info-card-title" id="event-card-title">Tote Bag Painting</div>
+          <div class="info-card-title" id="event-card-title">PAWSE</div>
 
           <div class="info-detail">
             <span class="info-icon">📅</span>
             <div>
               <div class="info-detail-title">Date &amp; Time</div>
-              <div class="info-detail-val" id="event-card-datetime">1st November 2026 | 3:00 PM - 5:00 PM</div>
+              <div class="info-detail-val" id="event-card-datetime">Dates coming soon</div>
             </div>
           </div>
           <div class="info-detail">
             <span class="info-icon">📍</span>
             <div>
               <div class="info-detail-title">Venue</div>
-              <a class="info-detail-val" id="event-card-venue" href="https://maps.app.goo.gl/LUCJtuf2mupL4WkWA" style="text-decoration:none;"
-                target="_blank"> Bansal Plaza, Bhopal</a>
+              <a class="info-detail-val" id="event-card-venue" href="#" style="text-decoration:none;color:inherit;"
+                target="_blank" rel="noopener noreferrer">Bhopal — venue to be announced</a>
             </div>
           </div>
           <div class="info-detail">
@@ -931,11 +1023,10 @@
         <div class="info-card perks-card" id="event-perks">
           <div class="info-card-label">INCLUDED</div>
           <ul class="perks-list">
-            <li class="perk-item"><span class="perk-check">✓</span>Canvas tote bag included</li>
-            <li class="perk-item"><span class="perk-check">✓</span>Halloween paints &amp; brushes provided</li>
-            <li class="perk-item"><span class="perk-check">✓</span>Spooky-cute design inspiration</li>
-            <li class="perk-item"><span class="perk-check">✓</span>Take your haunted tote home</li>
-            <li class="perk-item"><span class="perk-check">✓</span>All proceeds to animal rescue</li>
+            <li class="perk-item"><span class="perk-check">✓</span>Paw-friendly zones &amp; adoption drives</li>
+            <li class="perk-item"><span class="perk-check">✓</span>100% vegan food &amp; sustainable stalls</li>
+            <li class="perk-item"><span class="perk-check">✓</span>Music, games, workshops &amp; shopping</li>
+            <li class="perk-item"><span class="perk-check">✓</span>Proceeds support Animals With Humanity</li>
           </ul>
         </div>
       </aside>
@@ -945,8 +1036,8 @@
 
   <!-- FAQ -->
   <section id="FAQ" class="faq-section">
-    <div class="section-label"></div>
-    <h2 class="section-title">Common Questions</h2>
+    <div class="section-label">Help</div>
+    <h2 class="section-title">Common questions</h2>
     <div class="faq-list">
       <div class="faq-item">
         <button class="faq-q">How do I get my ticket after payment? <span class="faq-arrow">↓</span></button>

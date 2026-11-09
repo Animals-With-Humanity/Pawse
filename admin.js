@@ -101,19 +101,28 @@ $("refresh-list-btn").addEventListener("click", loadAttendees);
 function renderAttendeeTable(tickets) {
   const tbody = $("attendee-tbody");
   if (!tickets || tickets.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="8" class="table-loading">No tickets found.</td></tr>`; return;
+    tbody.innerHTML = `<tr><td colspan="10" class="table-loading">No tickets found.</td></tr>`; return;
   }
-  tbody.innerHTML = tickets.map((t) => `
+  tbody.innerHTML = tickets.map((t) => {
+    const seat =
+      t.totalTickets > 1 && t.ticketIndex
+        ? `<br/><small style="color:var(--text-muted)">Ticket ${t.ticketIndex}/${t.totalTickets}</small>`
+        : "";
+    const stay = t.requireStay ? `<span class="type-pill" style="background:rgba(240,2,129,0.15)">Yes</span>` : "No";
+    return `
     <tr>
       <td>${t.ticketId}</td>
-      <td style="color:var(--text)">${t.name}</td>
+      <td style="color:var(--text)">${t.name}${seat}</td>
       <td>${t.phone}</td>
+      <td>${t.city || "—"}</td>
+      <td>${stay}</td>
       <td>${t.ticketTypeLabel ? `<span class="type-pill">${t.ticketTypeLabel}</span>` : "-"}</td>
       <td>₹${t.amount}${t.discountAmount > 0 ? `<br/><small style="color:var(--green)">−₹${t.discountAmount}</small>` : ""}</td>
       <td>${t.coupon ? `<span class="type-pill ${t.coupon.type}">${t.coupon.code}</span>` : "-"}</td>
       <td>${formatDate(t.createdAt)}</td>
       <td><span class="status-pill ${t.isUsed ? "used" : "unused"}">${t.isUsed ? "CHECKED IN" : "PENDING"}</span></td>
-    </tr>`).join("");
+    </tr>`;
+  }).join("");
 }
 
 function formatDate(iso) {
@@ -189,7 +198,11 @@ function showValidResult(data) {
   $("result-phone").textContent = t.phone;
   $("result-ticket-id").textContent = t.ticketId;
   $("result-ticket-type").textContent = t.ticketTypeLabel || "General Admission";
-  $("result-amount").textContent = `Paid: ₹${t.amount}`;
+  const cityEl = $("result-city");
+  const stayEl = $("result-stay");
+  if (cityEl) cityEl.textContent = t.city ? `City: ${t.city}` : "";
+  if (stayEl) stayEl.textContent = t.requireStay ? "Needs stay in Bhopal: Yes" : "Needs stay: No";
+  $("result-amount").textContent = `Paid: ₹${t.amount}${t.totalTickets > 1 && t.ticketIndex ? ` (ticket ${t.ticketIndex}/${t.totalTickets})` : ""}`;
   showResultState("valid");
   playBeep(880, 150, "success");
 }

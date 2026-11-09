@@ -12,6 +12,8 @@ const state = {
   quantity: 1,
   coupon: null,
   needYogaMat: false,
+  city: "",
+  requireStay: false,
   // Selected ticket type (required - no fallback)
   selectedTicketType: null,
   ticketTypesLoaded: false,
@@ -367,8 +369,8 @@ function applyPublicEventDetails(config) {
   state.eventVenue = venue;
 
   const titleEl = $("event-title");
-  if (titleEl) titleEl.textContent = name;
-  document.title = `${name} - Tickets`;
+  if (titleEl && titleEl.tagName !== "IMG") titleEl.textContent = name;
+  document.title = `${name} — Book tickets | Animals With Humanity`;
 
   const dateLine = $("event-date-line");
   if (dateLine) {
@@ -532,6 +534,9 @@ function validateForm() {
   const whatsapp = isWhatsapp ? phone : $("whatsapp").value.trim().replace(/\s/g, "");
   const needYogaMat =
     document.querySelector('input[name="needYogaMat"]:checked')?.value === "yes";
+  const city = ($("city") && $("city").value.trim()) || "";
+  const requireStay =
+    document.querySelector('input[name="requireStay"]:checked')?.value === "yes";
 
   if (name.length < 2) {
     $("name-err").textContent = "Please enter your full name";
@@ -555,6 +560,15 @@ function validateForm() {
     $("phone-err").textContent = ""; $("phone").classList.remove("error");
   }
 
+  if (city.length < 2) {
+    if ($("city-err")) $("city-err").textContent = "Please enter your city";
+    if ($("city")) $("city").classList.add("error");
+    ok = false;
+  } else {
+    if ($("city-err")) $("city-err").textContent = "";
+    if ($("city")) $("city").classList.remove("error");
+  }
+
   if (!isWhatsapp && whatsapp.length > 0 && !/^[6-9]\d{9}$/.test(whatsapp)) {
     $("whatsapp-err").textContent = "Enter a valid 10-digit WhatsApp number";
     $("whatsapp").classList.add("error"); ok = false;
@@ -575,7 +589,8 @@ function validateForm() {
     state.phone = phone;
     state.whatsapp = whatsapp;
     state.needYogaMat = needYogaMat;
-
+    state.city = city;
+    state.requireStay = requireStay;
   }
   return ok;
 }
@@ -617,6 +632,8 @@ async function initiatePayment() {
       couponCode: state.coupon?.code || null,
       quantity: state.quantity,
       needYogaMat: state.needYogaMat,
+      city: state.city,
+      requireStay: state.requireStay,
     };
 
     // Ticket type is required
@@ -660,7 +677,7 @@ async function initiatePayment() {
         email: state.email,
         contact: `+91${state.phone}`,
       },
-      theme: { color: "#e8ff47", backdrop_color: "rgba(8,10,14,0.95)" },
+      theme: { color: "#7a27a9", backdrop_color: "rgba(31,18,60,0.92)" },
       modal: {
         ondismiss: () => {
           payBtn.disabled = false;

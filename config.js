@@ -13,13 +13,13 @@ const CONFIG = {
 
   // Used only when the page is opened without ?event=
   // Event cards on awhbharat.org should link to /?event=YOUR_EVENT_ID
-  DEFAULT_EVENT_ID: "TBP2026",
-  EVENT_ID: "TBP2026",
-  EVENT_NAME: "Tote Bag Painting",
-  EVENT_DATE: "1st November 2026 | 3:00 PM - 5:00 PM",
-  EVENT_VENUE: "Bansal Plaza, Bhopal",
+  DEFAULT_EVENT_ID: "PAWSE2027",
+  EVENT_ID: "PAWSE2027",
+  EVENT_NAME: "PAWSE",
+  EVENT_DATE: "Dates coming soon",
+  EVENT_VENUE: "Bhopal — venue to be announced",
   EVENT_DESCRIPTION:
-    "A spooky-cute Halloween tote bag painting session  paint pumpkins, bats, webs, and bold orange & purple designs on your own canvas tote. All materials provided.",
+    "PAWSE is Animals With Humanity’s pet-friendly community festival — paws, people, vegan food, music, adoption, and more. Book your pass and join us.",
 
   // Ticket price in INR
   TICKET_PRICE: 250,
