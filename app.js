@@ -9,16 +9,17 @@ const state = {
   email: "",
   phone: "",
   whatsapp: "",
-  quantity: 1,
   coupon: null,
   needYogaMat: false,
   city: "",
   requireStay: false,
   stayDays: null,
-  // Selected ticket type (required - no fallback)
-  selectedTicketType: null,
+  allTicketTypes: [],
+  cartLines: [],
   ticketTypesLoaded: false,
   ticketTypesLoading: true,
+  maxCartLines: 5,
+  maxTotalTickets: 10,
   pricing: {
     original: 0,
     discount: 0,
@@ -112,18 +113,15 @@ function showTicketTypeError(message) {
   state.ticketTypesLoaded = false;
   $("ticket-type-fallback").style.display = "none";
   $("ticket-types-loading").style.display = "none";
-
-  // Show error message in the ticket type area
-  const container = $("ticket-type-cards");
-  container.style.display = "flex";
-  container.innerHTML = `
+  const wrap = $("pass-picker-wrap");
+  if (wrap) {
+    wrap.classList.remove("hidden");
+    wrap.innerHTML = `
     <div style="text-align:center;padding:1.5rem 1rem;color:#ef4444;font-family:'Montserrat',sans-serif;font-size:0.85rem;border:1.5px dashed #fca5a5;border-radius:12px;background:rgba(239,68,68,0.04);">
       <div style="font-size:1.5rem;margin-bottom:0.5rem;">⚠️</div>
       <div style="font-weight:600;">${message}</div>
-    </div>
-  `;
-
-  // Disable the pay button
+    </div>`;
+  }
   disablePayButton("Tickets Unavailable");
 }
 
@@ -142,86 +140,250 @@ function enablePayButton() {
   payBtn.style.cursor = "";
 }
 
+function newCartLineId() {
+  return `line_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+}
+
+const LINE_DAY_FILTERS = [
+  { key: "day1", label: "Day 1" },
+  { key: "day2", label: "Day 2" },
+  { key: "day3", label: "Day 3" },
+  { key: "festival", label: "Full festival" },
+];
+
+function typeMatchesDayFilter(type, filter) {
+  const keys = type.validDayKeys || [];
+  if (filter === "festival") return keys.includes("all");
+  return keys.includes(filter) || keys.includes("all");
+}
+
+function getFilteredTypesForLine(line) {
+  const filter = line.dayFilter || "day1";
+  return state.allTicketTypes.filter((t) => typeMatchesDayFilter(t, filter));
+}
+
+function renderDayFilterTabsForLine(line) {
+  const active = line.dayFilter || "day1";
+  const buttons = LINE_DAY_FILTERS.map(
+    (f) =>
+      `<button type="button" class="day-filter-tab${active === f.key ? " active" : ""}" data-line-filter="${line.id}" data-filter="${f.key}">${f.label}</button>`,
+  ).join("");
+  return `<div class="day-filter-tabs" role="tablist" aria-label="Filter pass ${line.id} by day">${buttons}</div>`;
+}
+
+function getTotalCartQty() {
+  return state.cartLines.reduce((sum, line) => sum + (line.quantity || 0), 0);
+}
+
+function getCartSummary() {
+  let totalQty = 0;
+  let original = 0;
+  const labels = [];
+  const lineItems = [];
+
+  for (const line of state.cartLines) {
+    const type = state.allTicketTypes.find((t) => t.id === line.ticketTypeId);
+    if (!type) continue;
+    totalQty += line.quantity;
+    const lineTotal = type.price * line.quantity;
+    original += lineTotal;
+    labels.push(`${type.label}×${line.quantity}`);
+    lineItems.push({ ticketTypeId: type.id, quantity: line.quantity });
+  }
+
+  return { totalQty, original, labels, lineItems, complete: lineItems.length === state.cartLines.length && totalQty > 0 };
+}
+
+function ensureCartHasLine() {
+  if (state.cartLines.length === 0) {
+    state.cartLines.push({ id: newCartLineId(), ticketTypeId: null, quantity: 1, dayFilter: "day1" });
+  }
+}
+
 function renderTicketTypeCards(types) {
-  const container = $("ticket-type-cards");
-  container.innerHTML = "";
-  container.style.display = "flex";
+  state.allTicketTypes = types;
+  $("ticket-types-loading").style.display = "none";
+  $("pass-picker-wrap")?.classList.remove("hidden");
 
-  types.forEach((type) => {
-    const card = document.createElement("div");
-    card.className = "ticket-type-card" + (type.soldOut ? " sold-out" : "");
-    card.dataset.typeId = type.id;
+  if (state.cartLines.length === 0) {
+    ensureCartHasLine();
+  }
 
-    let availText = "";
-    if (type.soldOut) {
-      availText = "Sold out";
-    } else if (type.remaining !== null && type.remaining <= 20) {
-      availText = `${type.remaining} left`;
-    } else if (type.remaining !== null) {
-      availText = `${type.remaining} available`;
-    }
-
-    card.innerHTML = `
-      ${type.soldOut ? '<span class="sold-out-badge">SOLD OUT</span>' : ""}
-      <div class="ticket-type-card-left">
-        <div class="ticket-type-radio">
-          <div class="ticket-type-radio-dot"></div>
-        </div>
-        <div class="ticket-type-info">
-          <span class="ticket-type-name">${type.label}</span>
-          ${type.validDayLabel ? `<span class="ticket-type-desc">${type.validDayLabel}</span>` : (type.description ? `<span class="ticket-type-desc">${type.description}</span>` : "")}
-        </div>
-      </div>
-      <div class="ticket-type-right">
-        <span class="ticket-type-price">₹${type.price}</span>
-        ${availText ? `<span class="ticket-type-avail${type.remaining !== null && type.remaining <= 10 && !type.soldOut ? " low" : ""}">limited available</span>` : ""}
-      </div>
-    `;
-
-    if (!type.soldOut) {
-      card.addEventListener("click", () => selectTicketType(type));
-    }
-
-    container.appendChild(card);
-  });
-
-  // Auto-select the first non-sold-out type
-  const first = types.find((t) => !t.soldOut);
-  if (first) selectTicketType(first);
-
-  // Show qty section
-  $("qty-section").style.display = "block";
-}
-
-function selectTicketType(type) {
-  state.selectedTicketType = type;
-
-  // Update card highlight
-  document.querySelectorAll(".ticket-type-card").forEach((c) => {
-    c.classList.toggle("selected", c.dataset.typeId === type.id);
-  });
-
-  // Update qty label
-  $("qty-type-label").textContent = `${type.label} · ₹${type.price} each`;
-
-  // Reset coupon when type changes
-  if (state.coupon) removeCoupon();
-
+  renderCartLines();
+  updateAddPassButton();
   updatePriceDisplay();
 }
 
-/* ── Quantity Counter ─────────────────────────────────── */
-function setQuantity(qty) {
-  state.quantity = Math.max(1, Math.min(10, qty));
-  const qtyEl = $("qty-value");
-  if (qtyEl) qtyEl.textContent = state.quantity;
-  updatePriceDisplay();
-  if (state.coupon) removeCoupon();
+function renderCartLines() {
+  const container = $("cart-lines");
+  if (!container) return;
+
+  container.innerHTML = state.cartLines
+    .map((line, index) => {
+      if (!line.dayFilter) line.dayFilter = "day1";
+      const selected = state.allTicketTypes.find((t) => t.id === line.ticketTypeId);
+      const filtered = getFilteredTypesForLine(line);
+      const dayTabs = renderDayFilterTabsForLine(line);
+      const cards = filtered
+        .map((type) => {
+          let availText = "";
+          if (type.soldOut) availText = "Sold out";
+          else if (type.remaining !== null && type.remaining <= 20) availText = `${type.remaining} left`;
+
+          const selectedClass = line.ticketTypeId === type.id ? "selected" : "";
+          const soldClass = type.soldOut ? " sold-out" : "";
+          return `
+          <div class="ticket-type-card ${selectedClass}${soldClass}" data-line="${line.id}" data-type-id="${type.id}" role="button" tabindex="0">
+            ${type.soldOut ? '<span class="sold-out-badge">SOLD OUT</span>' : ""}
+            <div class="ticket-type-card-left">
+              <div class="ticket-type-radio"><div class="ticket-type-radio-dot"></div></div>
+              <div class="ticket-type-info">
+                <span class="ticket-type-name">${type.label}</span>
+                <span class="ticket-type-desc">${type.validDayLabel || type.description || ""}</span>
+              </div>
+            </div>
+            <div class="ticket-type-right">
+              <span class="ticket-type-price">₹${type.price}</span>
+              ${availText ? `<span class="ticket-type-avail">${availText}</span>` : ""}
+            </div>
+          </div>`;
+        })
+        .join("");
+
+      const emptyFilter = filtered.length === 0
+        ? `<p style="font-size:0.78rem;color:var(--text-muted);padding:0.5rem 0;">No passes for this day — try Day 2, Day 3, or Full festival.</p>`
+        : `<div class="cart-pass-cards">${cards}</div>`;
+
+      return `
+      <div class="cart-pass-block" data-line-block="${line.id}">
+        <div class="cart-pass-head">
+          <span class="cart-pass-title">Pass ${index + 1}${selected ? ` · ${selected.label}` : ""}</span>
+          ${state.cartLines.length > 1 ? `<button type="button" class="cart-pass-remove" data-remove="${line.id}">Remove</button>` : ""}
+        </div>
+        ${dayTabs}
+        ${emptyFilter}
+        <div class="cart-pass-qty">
+          <span style="font-family:'Montserrat',sans-serif;font-size:0.75rem;font-weight:600;color:var(--text-muted)">Qty for this pass</span>
+          <div class="qty-counter-wrap">
+            <button class="qty-btn cart-qty-minus" type="button" data-line="${line.id}" aria-label="Decrease">−</button>
+            <span class="qty-num">${line.quantity}</span>
+            <button class="qty-btn cart-qty-plus" type="button" data-line="${line.id}" aria-label="Increase">+</button>
+          </div>
+        </div>
+      </div>`;
+    })
+    .join("");
+
+  container.querySelectorAll(".ticket-type-card:not(.sold-out)").forEach((card) => {
+    const pick = () => {
+      const lineId = card.dataset.line;
+      const typeId = card.dataset.typeId;
+      selectTypeForLine(lineId, typeId);
+    };
+    card.addEventListener("click", pick);
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        pick();
+      }
+    });
+  });
+
+  container.querySelectorAll("[data-remove]").forEach((btn) => {
+    btn.addEventListener("click", () => removeCartLine(btn.dataset.remove));
+  });
+
+  container.querySelectorAll(".cart-qty-minus").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const line = state.cartLines.find((l) => l.id === btn.dataset.line);
+      if (line) setLineQuantity(line.id, line.quantity - 1);
+    });
+  });
+
+  container.querySelectorAll(".cart-qty-plus").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const line = state.cartLines.find((l) => l.id === btn.dataset.line);
+      if (line) setLineQuantity(line.id, line.quantity + 1);
+    });
+  });
+
+  container.querySelectorAll("[data-line-filter]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const line = state.cartLines.find((l) => l.id === btn.dataset.lineFilter);
+      if (!line) return;
+      line.dayFilter = btn.dataset.filter || "day1";
+      renderCartLines();
+    });
+  });
 }
 
-// Wire up qty buttons for the types-based section
-$("qty-minus").addEventListener("click", () => setQuantity(state.quantity - 1));
-$("qty-plus").addEventListener("click", () => setQuantity(state.quantity + 1));
+function selectTypeForLine(lineId, typeId) {
+  const type = state.allTicketTypes.find((t) => t.id === typeId);
+  if (!type || type.soldOut) return;
+
+  const duplicate = state.cartLines.some((l) => l.id !== lineId && l.ticketTypeId === typeId);
+  if (duplicate) {
+    showToast("This pass is already added — increase quantity on that line", "info");
+    return;
+  }
+
+  const line = state.cartLines.find((l) => l.id === lineId);
+  if (!line) return;
+  line.ticketTypeId = typeId;
+  if (state.coupon) removeCoupon();
+  renderCartLines();
+  updatePriceDisplay();
+}
+
+function setLineQuantity(lineId, qty) {
+  const line = state.cartLines.find((l) => l.id === lineId);
+  if (!line) return;
+
+  const next = Math.max(1, Math.min(10, qty));
+  const otherTotal = getTotalCartQty() - line.quantity;
+  if (otherTotal + next > state.maxTotalTickets) {
+    showToast(`Maximum ${state.maxTotalTickets} tickets per booking`, "error");
+    return;
+  }
+
+  line.quantity = next;
+  if (state.coupon) removeCoupon();
+  renderCartLines();
+  updatePriceDisplay();
+}
+
+function addCartLine() {
+  if (state.cartLines.length >= state.maxCartLines) {
+    showToast(`You can add up to ${state.maxCartLines} different passes`, "error");
+    return;
+  }
+  if (getTotalCartQty() >= state.maxTotalTickets) {
+    showToast(`Maximum ${state.maxTotalTickets} tickets per booking`, "error");
+    return;
+  }
+  state.cartLines.push({ id: newCartLineId(), ticketTypeId: null, quantity: 1, dayFilter: "day1" });
+  renderCartLines();
+  updateAddPassButton();
+}
+
+function removeCartLine(lineId) {
+  if (state.cartLines.length <= 1) return;
+  state.cartLines = state.cartLines.filter((l) => l.id !== lineId);
+  if (state.coupon) removeCoupon();
+  renderCartLines();
+  updateAddPassButton();
+  updatePriceDisplay();
+}
+
+function updateAddPassButton() {
+  const btn = $("add-pass-btn");
+  if (!btn) return;
+  const atMaxLines = state.cartLines.length >= state.maxCartLines;
+  const atMaxQty = getTotalCartQty() >= state.maxTotalTickets;
+  btn.disabled = atMaxLines || atMaxQty;
+}
+
+$("add-pass-btn")?.addEventListener("click", addCartLine);
 
 /* ── Coupon Logic ─────────────────────────────────────── */
 const couponInput = $("coupon-input");
@@ -243,14 +405,13 @@ applyBtn.addEventListener("click", async () => {
   applyBtn.disabled = true;
   hideCouponFeedback();
 
-  if (!state.selectedTicketType) {
-    showCouponFeedback("Please select a ticket type first", "error");
+  const cart = getCartSummary();
+  if (!cart.complete) {
+    showCouponFeedback("Select a pass type for each line first", "error");
     applyBtn.textContent = "Apply";
     applyBtn.disabled = false;
     return;
   }
-  const unitPrice = state.selectedTicketType.price;
-  const totalAmount = unitPrice * state.quantity;
 
   try {
     const res = await fetch(`${CONFIG.API_BASE}/api/coupon/validate`, {
@@ -260,8 +421,7 @@ applyBtn.addEventListener("click", async () => {
         code,
         eventId: CONFIG.EVENT_ID,
         phone,
-        quantity: state.quantity,
-        ticketTypeId: state.selectedTicketType.id,
+        lineItems: cart.lineItems,
       }),
     });
     const data = await res.json();
@@ -295,9 +455,8 @@ applyBtn.addEventListener("click", async () => {
 });
 
 function removeCoupon() {
-  if (!state.selectedTicketType) return;
-  const unitPrice = state.selectedTicketType.price;
-  const totalAmount = unitPrice * state.quantity;
+  const cart = getCartSummary();
+  const totalAmount = cart.original || 0;
   state.coupon = null;
   state.pricing = { original: totalAmount, discount: 0, final: totalAmount, bogo: false };
   couponInput.value = "";
@@ -450,12 +609,12 @@ function showEventClosed() {
 }
 /* ── Price Display ────────────────────────────────────── */
 function updatePriceDisplay() {
-  const qty = state.quantity;
+  const cart = getCartSummary();
+  const qty = cart.totalQty;
 
-  // If no ticket type selected, show zeroed-out state and keep button disabled
-  if (!state.selectedTicketType) {
-    $("price-line-label").textContent = `Select a ticket type`;
-    $("price-original").textContent = `₹0`;
+  if (!cart.complete) {
+    $("price-line-label").textContent = cart.totalQty > 0 ? "Finish selecting passes" : "Select your pass(es)";
+    $("price-original").textContent = `₹${cart.original || 0}`;
     $("price-platform-fee").textContent = `₹0.00`;
     $("price-gst").textContent = `₹0.00`;
     $("round-off-row").classList.add("hidden");
@@ -467,18 +626,14 @@ function updatePriceDisplay() {
     } else if (!state.ticketTypesLoaded) {
       disablePayButton("Tickets Unavailable");
     } else {
-      disablePayButton("Select a Ticket Type");
+      disablePayButton("Select Pass Type");
     }
     return;
   }
 
-  const unitPrice = state.selectedTicketType.price;
-  const totalOriginal = unitPrice * qty;
-
-  // Recalculate base if no coupon
   if (!state.coupon) {
-    state.pricing.original = totalOriginal;
-    state.pricing.final = totalOriginal;
+    state.pricing.original = cart.original;
+    state.pricing.final = cart.original;
     state.pricing.discount = 0;
   }
 
@@ -488,8 +643,10 @@ function updatePriceDisplay() {
   state.pricing.roundOff = roundOff;
   state.pricing.grandTotal = totalWithFee;
 
-  const typeName = state.selectedTicketType.label;
-  $("price-line-label").textContent = `${typeName} ×${qty}`;
+  const summaryLabel = cart.labels.length > 2
+    ? `${cart.labels.slice(0, 2).join(" + ")} +${cart.labels.length - 2} more`
+    : cart.labels.join(" + ");
+  $("price-line-label").textContent = summaryLabel || "Your passes";
   $("price-original").textContent = `₹${state.pricing.original}`;
 
   $("price-platform-fee").textContent = `₹${platformFee.toFixed(2)}`;
@@ -518,7 +675,6 @@ function updatePriceDisplay() {
   if (state.pricing.bogo) bogoRow.classList.remove("hidden");
   else bogoRow.classList.add("hidden");
 
-  // Enable pay button since we have a valid ticket type
   enablePayButton();
   $("pay-btn-text").textContent = state.pricing.final === 0
     ? `Get ${qty} Free Ticket${qty > 1 ? "s" : ""} →`
@@ -582,9 +738,9 @@ function validateForm() {
     if ($("whatsapp")) $("whatsapp").classList.remove("error");
   }
 
-  // Require a ticket type selection - no fallback
-  if (!state.selectedTicketType) {
-    showToast("Please select a ticket type", "error");
+  const cart = getCartSummary();
+  if (!cart.complete) {
+    showToast("Select a pass type for each line", "error");
     ok = false;
   }
 
@@ -658,6 +814,7 @@ async function initiatePayment() {
   payError.classList.add("hidden");
 
   try {
+    const cart = getCartSummary();
     const orderBody = {
       name: state.name,
       email: state.email,
@@ -666,15 +823,12 @@ async function initiatePayment() {
       imageUrl: "",
       eventId: CONFIG.EVENT_ID,
       couponCode: state.coupon?.code || null,
-      quantity: state.quantity,
+      lineItems: cart.lineItems,
       needYogaMat: state.needYogaMat,
       city: state.city,
       requireStay: state.requireStay,
       stayDays: state.stayDays,
     };
-
-    // Ticket type is required
-    orderBody.ticketTypeId = state.selectedTicketType.id;
 
     const orderRes = await fetch(`${CONFIG.API_BASE}/api/payment/create-order`, {
       method: "POST",
@@ -708,7 +862,7 @@ async function initiatePayment() {
       amount: orderData.amount,
       currency: orderData.currency || "INR",
       name: state.eventName || CONFIG.EVENT_NAME,
-      description: `${state.quantity} ${state.selectedTicketType.label}${state.quantity > 1 ? "s" : ""} - ${state.eventDate || CONFIG.EVENT_DATE}`,
+      description: `${cart.totalQty} ticket(s) - ${state.eventDate || CONFIG.EVENT_DATE}`,
       prefill: {
         name: state.name,
         email: state.email,

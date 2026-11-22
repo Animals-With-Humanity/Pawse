@@ -640,6 +640,131 @@
       border-radius: 9999px;
     }
 
+    .passes-hint {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.78rem;
+      color: var(--text-muted, #6B7280);
+      margin: -0.25rem 0 1rem;
+      line-height: 1.45;
+    }
+
+    .day-filter-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .cart-pass-block .day-filter-tabs {
+      margin-bottom: 0.75rem;
+    }
+
+    .cart-pass-block .day-filter-tab {
+      font-size: 0.68rem;
+      padding: 0.4rem 0.62rem;
+    }
+
+    .day-filter-tab {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.45rem 0.75rem;
+      border-radius: 999px;
+      border: 1.5px solid rgba(122, 39, 169, 0.25);
+      background: rgba(255, 255, 255, 0.6);
+      color: var(--text, #1f1240);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .day-filter-tab.active {
+      background: linear-gradient(135deg, #7a27a9, #9d4edd);
+      border-color: transparent;
+      color: #fff;
+    }
+
+    .cart-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .cart-pass-block {
+      border: 1.5px solid rgba(122, 39, 169, 0.18);
+      border-radius: 14px;
+      padding: 0.85rem 0.85rem 0.65rem;
+      background: rgba(255, 255, 255, 0.55);
+    }
+
+    .cart-pass-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.65rem;
+      gap: 0.5rem;
+    }
+
+    .cart-pass-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text, #1f1240);
+    }
+
+    .cart-pass-remove {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #ef4444;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.2rem 0.35rem;
+    }
+
+    .cart-pass-qty {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-top: 0.65rem;
+      padding-top: 0.55rem;
+      border-top: 1px dashed rgba(122, 39, 169, 0.15);
+    }
+
+    .add-pass-btn {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      border: 1.5px dashed rgba(122, 39, 169, 0.45);
+      background: rgba(122, 39, 169, 0.06);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #7a27a9;
+      cursor: pointer;
+    }
+
+    .add-pass-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .passes-limit-note {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.68rem;
+      color: #9CA3AF;
+      text-align: center;
+      margin: 0.5rem 0 0;
+    }
+
+  .cart-pass-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
     .instructor-section {
       max-width: 1100px;
       margin: 0 auto;
@@ -1159,38 +1284,24 @@
           </div> -->
         </div>
 
-        <!-- SECTION: Ticket Type -->
-        <div class="form-section">
-          <div class="form-section-title">Select Ticket Type</div>
+        <!-- SECTION: Passes -->
+        <div class="form-section" id="passes-section">
+          <div class="form-section-title">Choose Your Passes</div>
+          <p class="passes-hint">Each pass has its own day filter — pick a type, add more passes if needed — one checkout.</p>
 
-          <!-- Ticket type cards (populated by app.js from API) -->
           <div id="ticket-types-loading"
             style="text-align:center;padding:1rem 0;color:#9CA3AF;font-family:'Montserrat',sans-serif;font-size:0.85rem;">
             Loading ticket options… this can take a moment
           </div>
-          <div id="ticket-type-cards" style="display:none;display:flex;flex-direction:column;gap:0.75rem;"></div>
-          <!-- Fallback label shown when no types are configured in Firestore -->
-          <div id="ticket-type-fallback" style="display:none;">
-            <div class="qty-label-block">
-              <span class="qty-main-label">Entry Pass · ₹<span id="qty-unit-price">250</span> each</span>
-            </div>
-          </div>
-        </div>
 
-        <!-- SECTION: Quantity - single counter, shown in both type-selection and fallback modes -->
-        <div class="form-section" id="qty-section" style="display:none;">
-          <div class="form-section-title">Number of Tickets</div>
-          <div class="qty-row">
-            <div class="qty-label-block">
-              <span class="qty-main-label" id="qty-type-label">Entry Pass</span>
-              <span class="qty-sub-label">Max 10 per booking</span>
-            </div>
-            <div class="qty-counter-wrap">
-              <button class="qty-btn" id="qty-minus" type="button" aria-label="Decrease">−</button>
-              <span class="qty-num" id="qty-value">1</span>
-              <button class="qty-btn" id="qty-plus" type="button" aria-label="Increase">+</button>
-            </div>
+          <div id="pass-picker-wrap" class="hidden">
+            <div id="cart-lines" class="cart-lines"></div>
+
+            <button type="button" class="add-pass-btn" id="add-pass-btn">+ Add another pass</button>
+            <p class="passes-limit-note" id="passes-limit-note">Up to 5 pass lines · 10 tickets total per booking</p>
           </div>
+
+          <div id="ticket-type-fallback" style="display:none;"></div>
         </div>
 
         <!-- SECTION: Coupon -->

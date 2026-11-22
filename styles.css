@@ -1805,7 +1805,7 @@ p.desc {
   border: 1px solid rgba(77, 255, 158, 0.25);
   border-radius: var(--radius);
   margin-bottom: 2.5rem;
-  color: var(--green);
+  /* color: var(--green); */
 }
 
 .success-icon {
