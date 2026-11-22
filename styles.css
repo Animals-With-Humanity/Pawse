@@ -461,7 +461,13 @@ nav.header-nav {
   }
 
   .cta-btn {
-    font-size: 0.8rem !important;
+    width: min(100%, 22rem);
+    max-width: 100%;
+    justify-content: center;
+    padding: 0.9rem 1.15rem !important;
+    font-size: 0.9rem !important;
+    line-height: 1.35;
+    gap: 0.45rem;
   }
 
   .dot {
@@ -475,12 +481,16 @@ nav.header-nav {
   }
 
   .date-top {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    line-height: 1.45;
+    padding: 0 0.25rem;
     text-align: center;
   }
 
   .hero-eyebrow {
     flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
   }
 
   .hero-title-line {
@@ -492,7 +502,7 @@ nav.header-nav {
   }
 
   .hero {
-    padding: 4rem 1rem 3rem;
+    padding: calc(80px + 1.25rem) 1rem 2.5rem;
   }
 }
 
@@ -521,8 +531,9 @@ nav.header-nav {
   z-index: 1;
   max-width: 900px;
   margin: 0 auto;
-  padding: 6rem 2rem 5rem;
+  padding: calc(80px + 3rem) 1.5rem 4rem;
   text-align: center;
+  overflow-x: clip;
 }
 
 .hero-eyebrow {
@@ -891,8 +902,10 @@ nav.header-nav {
   position: relative;
   z-index: 1;
   max-width: 1100px;
+  width: 100%;
   margin: 0 auto;
   padding: 5rem 2rem;
+  overflow-x: clip;
 }
 
 .section-label {
@@ -914,14 +927,17 @@ nav.header-nav {
 /* ─── Booking Layout ─────────────────────────────────────────────── */
 .booking-layout {
   display: grid;
-  grid-template-columns: 1fr 340px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
   gap: 2rem;
   align-items: stretch;
+  width: 100%;
+  min-width: 0;
 }
 
 @media (max-width: 860px) {
   .booking-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0;
   }
 
   .event-info {
@@ -937,6 +953,9 @@ nav.header-nav {
   padding: 2.5rem;
   color: #1a1a1a;
   backdrop-filter: blur(12px);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 /* Steps indicator */
@@ -1082,6 +1101,14 @@ nav.header-nav {
 .phone-wrap {
   display: flex;
   align-items: center;
+  min-width: 0;
+  width: 100%;
+}
+
+.phone-wrap .phone-input {
+  min-width: 0;
+  flex: 1;
+  width: 1%;
 }
 
 .phone-prefix {
@@ -2661,6 +2688,36 @@ p.desc {
   display: flex;
   gap: 0.6rem;
   align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .coupon-input-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .coupon-input-row .field-wrap {
+    width: 100%;
+  }
+
+  .coupon-apply-btn,
+  .coupon-remove-btn {
+    width: 100%;
+  }
+
+  .booking-section,
+  .faq-section {
+    padding: 2.5rem 1rem 3.5rem;
+  }
+
+  .form-card {
+    padding: 1.35rem 1rem;
+  }
+
+  .info-card {
+    padding: 1.15rem 1rem;
+  }
 }
 
 .coupon-field {

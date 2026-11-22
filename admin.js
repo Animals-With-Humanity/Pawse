@@ -7,6 +7,12 @@ let adminToken = sessionStorage.getItem("adminToken") || "";
 let eventId = sessionStorage.getItem("eventId") || "";
 let html5QrCode = null;
 let scannerActive = false;
+let lastFailedTicketId = null;
+let festivalDaysConfig = [
+  { key: "day1", label: "Day 1" },
+  { key: "day2", label: "Day 2" },
+  { key: "day3", label: "Day 3" },
+];
 
 function showToast(msg, type = "info") {
   const toast = $("toast");
@@ -56,6 +62,7 @@ function showDashboard() {
   loadTicketTypes();
   loadEventSettings();
   loadPhotoGallery();
+  initGateDaySelector();
 }
 
 $("logout-btn").addEventListener("click", () => {
@@ -101,7 +108,7 @@ $("refresh-list-btn").addEventListener("click", loadAttendees);
 function renderAttendeeTable(tickets) {
   const tbody = $("attendee-tbody");
   if (!tickets || tickets.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="11" class="table-loading">No tickets found.</td></tr>`; return;
+    tbody.innerHTML = `<tr><td colspan="15" class="table-loading">No tickets found.</td></tr>`; return;
   }
   tbody.innerHTML = tickets.map((t) => {
     const seat =
@@ -110,6 +117,14 @@ function renderAttendeeTable(tickets) {
         : "";
     const stay = t.requireStay ? `<span class="type-pill" style="background:rgba(240,2,129,0.15)">Yes</span>` : "No";
     const stayDays = t.requireStay && typeof t.stayDays === "number" ? t.stayDays : "—";
+    const validFor = t.validDayLabel || (t.validDayKeys?.length ? t.validDayKeys.join(", ") : "—");
+    const expected = t.expectedCheckInDays ?? (t.validDayKeys?.includes("all") ? 3 : (t.validDayKeys?.length || 1));
+    const checked = t.checkInDayCount ?? (t.isUsed ? 1 : 0);
+    const daysChecked = t.checkedInDays || (t.dayCheckIns ? Object.keys(t.dayCheckIns).join(", ") : "");
+    const checkInLabel = checked > 0
+      ? `${checked}/${expected}${daysChecked ? ` (${daysChecked})` : ""}`
+      : "—";
+    const safeId = t.ticketId.replace(/'/g, "\\'");
     return `
     <tr>
       <td>${t.ticketId}</td>
@@ -122,7 +137,13 @@ function renderAttendeeTable(tickets) {
       <td>₹${t.amount}${t.discountAmount > 0 ? `<br/><small style="color:var(--green)">−₹${t.discountAmount}</small>` : ""}</td>
       <td>${t.coupon ? `<span class="type-pill ${t.coupon.type}">${t.coupon.code}</span>` : "-"}</td>
       <td>${formatDate(t.createdAt)}</td>
-      <td><span class="status-pill ${t.isUsed ? "used" : "unused"}">${t.isUsed ? "CHECKED IN" : "PENDING"}</span></td>
+      <td style="font-size:0.78rem;max-width:120px">${validFor}</td>
+      <td style="font-size:0.78rem">${checkInLabel}</td>
+      <td><span class="status-pill ${checked > 0 ? "used" : "unused"}">${checked > 0 ? (checked >= expected ? "ALL DAYS" : "PARTIAL") : "PENDING"}</span></td>
+      <td style="white-space:nowrap">
+        <button class="coupon-action-btn" type="button" onclick="manualCheckIn('${safeId}', true)">Check in</button>
+        <button class="coupon-action-btn" type="button" onclick="manualCheckIn('${safeId}', false)">Pending</button>
+      </td>
     </tr>`;
   }).join("");
 }
@@ -172,19 +193,99 @@ $("verify-manual-btn").addEventListener("click", () => {
 
 $("manual-ticket-id").addEventListener("keydown", (e) => { if (e.key === "Enter") $("verify-manual-btn").click(); });
 
-async function verifyTicket(ticketId) {
+function getGateDayKey() {
+  const el = $("gate-day-key");
+  return el ? el.value : "day1";
+}
+
+function initGateDaySelector() {
+  const el = $("gate-day-key");
+  if (!el || !eventId) return;
+
+  const saved = localStorage.getItem(`gateDayKey_${eventId}`);
+  if (saved && ["day1", "day2", "day3"].includes(saved)) el.value = saved;
+
+  applyFestivalDaysToGateSelect(festivalDaysConfig);
+
+  el.addEventListener("change", () => {
+    localStorage.setItem(`gateDayKey_${eventId}`, el.value);
+  });
+}
+
+function applyFestivalDaysToGateSelect(days) {
+  const el = $("gate-day-key");
+  if (!el || !Array.isArray(days) || days.length === 0) return;
+
+  const current = el.value;
+  el.innerHTML = days
+    .map((d) => `<option value="${d.key}">${d.label || d.key}</option>`)
+    .join("");
+
+  if (days.some((d) => d.key === current)) el.value = current;
+  else if (days[0]) el.value = days[0].key;
+}
+
+async function verifyTicket(ticketId, { force = false, forceReason = "" } = {}) {
   showResultState("loading");
+  lastFailedTicketId = null;
   try {
+    const body = {
+      ticketId,
+      eventId,
+      gateDayKey: getGateDayKey(),
+    };
+    if (force) {
+      body.force = true;
+      body.forceReason = forceReason;
+    }
+
     const res = await fetch(`${CONFIG.API_BASE}/api/ticket/verify`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` },
-      body: JSON.stringify({ ticketId, eventId }),
+      body: JSON.stringify(body),
     });
     const data = await res.json();
-    if (data.valid) { showValidResult(data); loadAttendees(); }
-    else showInvalidResult(data);
+    if (!res.ok && data.error) {
+      showToast(data.error, "error");
+      showResultState("idle");
+      return;
+    }
+    if (data.valid) {
+      showValidResult(data);
+      $("force-entry-reason").value = "";
+      $("invalid-force-wrap")?.classList.add("hidden");
+      loadAttendees();
+    } else {
+      lastFailedTicketId = ticketId;
+      showInvalidResult(data);
+    }
   } catch (err) { showResultState("idle"); showToast("Verification failed.", "error"); }
 }
+
+async function manualCheckIn(ticketId, isUsed) {
+  const action = isUsed ? "mark as CHECKED IN" : "reset to PENDING";
+  if (!confirm(`Are you sure you want to ${action} for ticket ${ticketId}?`)) return;
+  const note = prompt(`Reason for manual update (required):`);
+  if (!note || note.trim().length < 3) {
+    showToast("A short reason is required", "error");
+    return;
+  }
+  try {
+    const res = await fetch(`${CONFIG.API_BASE}/api/ticket/${ticketId}/check-in`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` },
+      body: JSON.stringify({ isUsed, note: note.trim(), gateDayKey: getGateDayKey() }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed");
+    showToast(isUsed ? "Ticket checked in" : "Ticket set to pending", "success");
+    loadAttendees();
+  } catch (err) {
+    showToast(err.message, "error");
+  }
+}
+
+window.manualCheckIn = manualCheckIn;
 
 function showResultState(state) {
   ["result-idle", "result-loading", "result-valid", "result-invalid"].forEach((id) => {
@@ -200,6 +301,12 @@ function showValidResult(data) {
   $("result-phone").textContent = t.phone;
   $("result-ticket-id").textContent = t.ticketId;
   $("result-ticket-type").textContent = t.ticketTypeLabel || "General Admission";
+  const daysEl = $("result-valid-days");
+  if (daysEl) {
+    daysEl.textContent = t.validDayLabel
+      ? `Valid for: ${t.validDayLabel}`
+      : (t.validDayKeys?.length ? `Valid for: ${t.validDayKeys.join(", ")}` : "");
+  }
   const cityEl = $("result-city");
   const stayEl = $("result-stay");
   if (cityEl) cityEl.textContent = t.city ? `City: ${t.city}` : "";
@@ -209,6 +316,11 @@ function showValidResult(data) {
     stayEl.textContent = t.requireStay ? `Needs stay in Bhopal: Yes${days}` : "Needs stay: No";
   }
   $("result-amount").textContent = `Paid: ₹${t.amount}${t.totalTickets > 1 && t.ticketIndex ? ` (ticket ${t.ticketIndex}/${t.totalTickets})` : ""}`;
+  const checkInEl = $("result-check-ins");
+  if (checkInEl && typeof t.checkInDayCount === "number") {
+    const exp = t.expectedCheckInDays ?? 1;
+    checkInEl.textContent = `Check-ins: ${t.checkInDayCount}/${exp}${t.checkedInDays ? ` (${t.checkedInDays})` : ""}`;
+  }
   showResultState("valid");
   playBeep(880, 150, "success");
 }
@@ -218,12 +330,48 @@ function showInvalidResult(data) {
     TICKET_NOT_FOUND: "Ticket does not exist",
     WRONG_EVENT: "Ticket is for a different event",
     ALREADY_USED: "Ticket already used - DENY ENTRY",
+    ALREADY_USED_FOR_DAY: "Already checked in today - DENY ENTRY",
+    WRONG_DAY: "Wrong festival day",
+    GATE_DAY_REQUIRED: "Select scanning day",
   };
   $("invalid-reason").textContent = reasons[data.reason] || data.message || "Invalid ticket";
-  $("invalid-detail").textContent = data.ticket?.usedAt ? `Used at: ${formatDate(data.ticket.usedAt)}` : "";
+
+  let detail = "";
+  if (data.ticket?.validDayLabel) detail += `Pass: ${data.ticket.validDayLabel}. `;
+  if (typeof data.ticket?.checkInDayCount === "number" && data.ticket.expectedCheckInDays) {
+    detail += `Check-ins: ${data.ticket.checkInDayCount}/${data.ticket.expectedCheckInDays}. `;
+  }
+  if (data.ticket?.usedAt) detail += `First check-in: ${formatDate(data.ticket.usedAt)}`;
+  $("invalid-detail").textContent = detail || data.message || "";
+
+  const forceWrap = $("invalid-force-wrap");
+  if (forceWrap) {
+    if (data.canForce && data.reason === "WRONG_DAY") {
+      forceWrap.classList.remove("hidden");
+      forceWrap.style.display = "flex";
+    } else {
+      forceWrap.classList.add("hidden");
+      forceWrap.style.display = "none";
+    }
+  }
+
   showResultState("invalid");
   playBeep(220, 300, "error");
 }
+
+$("force-entry-btn")?.addEventListener("click", async () => {
+  if (!lastFailedTicketId) {
+    showToast("No ticket to override", "error");
+    return;
+  }
+  const reason = ($("force-entry-reason")?.value || "").trim();
+  if (reason.length < 3) {
+    showToast("Enter an override reason", "error");
+    return;
+  }
+  if (!confirm("Allow entry even though the pass day does not match? This will be logged.")) return;
+  await verifyTicket(lastFailedTicketId, { force: true, forceReason: reason });
+});
 
 $("scan-next-valid").addEventListener("click", () => showResultState("idle"));
 $("scan-next-invalid").addEventListener("click", () => showResultState("idle"));
@@ -277,7 +425,7 @@ $("refresh-tt-btn").addEventListener("click", loadTicketTypes);
 function renderTicketTypeTable(types) {
   const tbody = $("tt-tbody");
   if (!types || types.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" class="table-loading">No ticket types yet. Create one above.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" class="table-loading">No ticket types yet. Create one above.</td></tr>`;
     return;
   }
 
@@ -294,6 +442,7 @@ function renderTicketTypeTable(types) {
       <td style="font-weight:600;color:var(--text)">${t.label}</td>
       <td>₹${t.price}</td>
       <td>${capacityDisplay}${soldOutBadge}</td>
+      <td style="font-size:0.78rem;max-width:100px">${t.validDayLabel || (t.validDayKeys || []).join(", ") || "-"}</td>
       <td style="color:var(--text-muted);font-size:0.78rem;max-width:180px">${t.description || "-"}</td>
       <td>
         ${t.active
@@ -311,6 +460,44 @@ function renderTicketTypeTable(types) {
   }).join("");
 }
 
+function readTicketTypeValidDayKeys() {
+  const allCb = $("tt-day-all");
+  if (allCb?.checked) return ["all"];
+  const keys = Array.from(document.querySelectorAll("input[name='tt-day']:checked"))
+    .map((el) => el.value)
+    .filter((v) => v !== "all");
+  return keys;
+}
+
+function setTicketTypeValidDayKeys(keys) {
+  const list = Array.isArray(keys) ? keys : [];
+  const allCb = $("tt-day-all");
+  document.querySelectorAll("input[name='tt-day']").forEach((el) => {
+    if (el.value === "all") {
+      el.checked = list.includes("all");
+    } else {
+      el.checked = list.includes("all") || list.includes(el.value);
+    }
+  });
+}
+
+(function bindTicketTypeDayCheckboxes() {
+  const allCb = $("tt-day-all");
+  if (!allCb) return;
+  allCb.addEventListener("change", () => {
+    if (allCb.checked) {
+      document.querySelectorAll("input[name='tt-day']:not([value='all'])").forEach((c) => {
+        c.checked = false;
+      });
+    }
+  });
+  document.querySelectorAll("input[name='tt-day']:not([value='all'])").forEach((el) => {
+    el.addEventListener("change", () => {
+      if (el.checked) allCb.checked = false;
+    });
+  });
+})();
+
 $("create-tt-btn").addEventListener("click", async () => {
   const id = $("tt-id").value.trim();
   const label = $("tt-label").value.trim();
@@ -319,9 +506,11 @@ $("create-tt-btn").addEventListener("click", async () => {
   const totalCapacity = capacityVal ? parseInt(capacityVal) : null;
   const order = parseInt($("tt-order").value) || 0;
   const description = $("tt-description").value.trim();
+  const validDayKeys = readTicketTypeValidDayKeys();
 
   if (!label) { showToast("Label is required", "error"); return; }
   if (isNaN(price) || price < 0) { showToast("Enter a valid price", "error"); return; }
+  if (!validDayKeys.length) { showToast("Select at least one valid festival day", "error"); return; }
 
   const btn = $("create-tt-btn");
   const isEdit = editingTicketTypeId !== null;
@@ -338,7 +527,7 @@ $("create-tt-btn").addEventListener("click", async () => {
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` },
-          body: JSON.stringify({ label, description, price, totalCapacity, order }),
+          body: JSON.stringify({ label, description, price, totalCapacity, order, validDayKeys }),
         }
       );
     } else {
@@ -349,7 +538,7 @@ $("create-tt-btn").addEventListener("click", async () => {
         {
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` },
-          body: JSON.stringify({ id, label, description, price, totalCapacity, order }),
+          body: JSON.stringify({ id, label, description, price, totalCapacity, order, validDayKeys }),
         }
       );
     }
@@ -389,6 +578,7 @@ function editTicketType(typeId) {
       $("tt-capacity").value = t.totalCapacity !== null ? t.totalCapacity : "";
       $("tt-order").value = t.order || 0;
       $("tt-description").value = t.description || "";
+      setTicketTypeValidDayKeys(t.validDayKeys || []);
       $("create-tt-btn").textContent = "Save Changes";
       $("cancel-tt-edit-btn").style.display = "inline-flex";
 
@@ -408,6 +598,7 @@ function resetTicketTypeForm() {
   $("tt-capacity").value = "";
   $("tt-order").value = "";
   $("tt-description").value = "";
+  setTicketTypeValidDayKeys([]);
   $("create-tt-btn").textContent = "+ Create Ticket Type";
   $("cancel-tt-edit-btn").style.display = "none";
 }
@@ -678,6 +869,11 @@ function applyEventConfigToUI(config) {
   if ($("ev-venue")) $("ev-venue").value = config.venue || "";
   if ($("ev-description")) $("ev-description").value = config.description || "";
   if ($("ev-map")) $("ev-map").value = config.mapUrl || "";
+
+  if (Array.isArray(config.festivalDays) && config.festivalDays.length > 0) {
+    festivalDaysConfig = config.festivalDays;
+    applyFestivalDaysToGateSelect(festivalDaysConfig);
+  }
 }
 
 function syncFeeTypeLabels(feeType) {

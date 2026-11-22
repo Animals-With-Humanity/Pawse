@@ -101,7 +101,8 @@ function createTicketCard(ticket, index, total) {
   if (seatTotal > 1) {
     const label = document.createElement("div");
     label.className = "ticket-index-label";
-    label.innerHTML = `<span class="til-num">Ticket ${seatIndex}</span><span class="til-total">of ${seatTotal}</span>`;
+    const passHint = ticket.validDayLabel ? ` · ${ticket.validDayLabel}` : "";
+    label.innerHTML = `<span class="til-num">Ticket ${seatIndex}</span><span class="til-total">of ${seatTotal}${passHint}</span>`;
     wrapper.appendChild(label);
   }
 
@@ -127,17 +128,26 @@ function createTicketCard(ticket, index, total) {
 
   // ── Price line ──
   let priceHTML = "";
-  if (ticket.originalAmount && ticket.originalAmount !== ticket.amount) {
-    priceHTML = `<div class="ticket-price-line"><s>₹${ticket.originalAmount}</s> <span class="ticket-price-final">${ticket.amount === 0 ? "FREE" : `₹${ticket.amount}`}</span></div>`;
-  } else {
-    priceHTML = `<div class="ticket-price-line">${ticket.amount === 0 ? "FREE" : `₹${ticket.amount}`}</div>`;
-  }
+  // if (ticket.originalAmount && ticket.originalAmount !== ticket.amount) {
+  //   priceHTML = `<div class="ticket-price-line"><s>₹${ticket.originalAmount}</s> <span class="ticket-price-final">${ticket.amount === 0 ? "FREE" : `₹${ticket.amount}`}</span></div>`;
+  // } else {
+  //   priceHTML = `<div class="ticket-price-line">${ticket.amount === 0 ? "FREE" : `₹${ticket.amount}`}</div>`;
+  // }
+
+  const passLabel =
+    ticket.validDayLabel ||
+    (ticket.validDayKeys?.length
+      ? ticket.validDayKeys.map((k) => (k === "all" ? "All festival days" : k)).join(" · ")
+      : "");
+  const festivalDates = CONFIG.EVENT_DATE || "See event schedule";
+  const eventYearMatch = String(festivalDates).match(/\b(20\d{2})\b/);
+  const eventYear = eventYearMatch ? eventYearMatch[1] : new Date().getFullYear();
 
   ticketDiv.innerHTML = `
     <div class="ticket-left">
       <div class="ticket-event-name">${ticket.eventName || CONFIG.EVENT_NAME}</div>
-      <div class="ticket-event-year">2026</div>
-      <div class="ticket-date">${ticket.eventDate || "1st November 2026"}</div>
+      <div class="ticket-event-year">${eventYear}</div>
+      <div class="ticket-date">${festivalDates}</div>
       <div class="ticket-venue">${ticket.eventVenue || CONFIG.EVENT_VENUE}</div>
 
       <div class="ticket-divider">
@@ -154,6 +164,7 @@ function createTicketCard(ticket, index, total) {
       </div>
 
       <div class="ticket-type-badge">${ticket.isBogoPair ? "BOGO BONUS" : (ticket.ticketTypeLabel || "GENERAL ADMISSION")}</div>
+      ${passLabel ? `<div class="ticket-pass-days" style="margin-top:0.5rem;padding:0.35rem 0.65rem;background:rgba(122,39,169,0.12);border:1px solid rgba(122,39,169,0.22);border-radius:8px;font-family:'Montserrat',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.04em;text-align:center;color:#5b1d7e;text-transform:uppercase;">Entry: ${passLabel}</div>` : ""}
       ${couponBadgeHTML}
       ${bogoBadgeHTML}
     </div>
@@ -181,7 +192,7 @@ function createTicketCard(ticket, index, total) {
       </svg>
       Download Ticket ${total > 1 ? (index + 1) : ""}
     </button>
-    <a class="ticket-action-btn" style="text-decoration:none" href="${CONFIG.PHOTO_GALLERY_URL}#ticket=${encodeURIComponent(ticket.ticketId)}" target="_blank" rel="noopener noreferrer">View event photos</a>
+    
   `;
   wrapper.appendChild(actions);
 

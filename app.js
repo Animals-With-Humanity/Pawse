@@ -169,7 +169,7 @@ function renderTicketTypeCards(types) {
         </div>
         <div class="ticket-type-info">
           <span class="ticket-type-name">${type.label}</span>
-          ${type.description ? `<span class="ticket-type-desc">${type.description}</span>` : ""}
+          ${type.validDayLabel ? `<span class="ticket-type-desc">${type.validDayLabel}</span>` : (type.description ? `<span class="ticket-type-desc">${type.description}</span>` : "")}
         </div>
       </div>
       <div class="ticket-type-right">
@@ -371,7 +371,7 @@ function applyPublicEventDetails(config) {
 
   const titleEl = $("event-title");
   if (titleEl && titleEl.tagName !== "IMG") titleEl.textContent = name;
-  document.title = `${name} — Book tickets | Animals With Humanity`;
+  document.title = `${name} - Book tickets | Animals With Humanity`;
 
   const dateLine = $("event-date-line");
   if (dateLine) {
@@ -780,7 +780,7 @@ const EVENT_TERMS = [
     summary:
       "Each pass allows a single entry. Once you leave the venue, the same pass cannot be used to enter again.",
     detail:
-      "For security and crowd management, entry is one-time per issued pass. Plan your visit accordingly. Re-entry may only be permitted if expressly stated on your pass type or announced officially by the organisers—otherwise, exiting the venue ends your access for that day.",
+      "For security and crowd management, entry is one-time per issued pass. Plan your visit accordingly. Re-entry may only be permitted if expressly stated on your pass type or announced officially by the organisers-otherwise, exiting the venue ends your access for that day.",
   },
   {
     title: "Gate entry & QR scan",
@@ -806,9 +806,9 @@ const EVENT_TERMS = [
   {
     title: "Bringing your pet",
     summary:
-      "Pets are welcome only if leashed (or safely contained) and under your control at all times.",
+      "Pets are welcome at PAWSE. Please keep them on a leash or in a comfortable carrier, stay close by, and help ensure they are calm and safe around other guests and the venue.",
     detail:
-      "PAWSE is pet-friendly, but you are solely responsible for your animal’s behaviour, waste, hydration, and wellbeing. Aggressive, uncontrolled, or distressed animals may be asked to leave. Service animals are welcome in accordance with applicable law. The organisers reserve the right to restrict entry for animals if safety or welfare concerns arise.",
+      "PAWSE is proudly pet-friendly. Your pet is your responsibility: please supervise them at all times and take gentle steps to prevent jumping, nipping, knocking over displays, or damaging anyone’s belongings. Look after their comfort, hydration, and bathroom needs throughout the day. If your pet seems excited, anxious, or overwhelmed, please guide them to a quieter spot. Thoughtful pet parenting keeps the festival enjoyable for people, pets, and stall teams alike.",
   },
   {
     title: "Interacting with other pets",

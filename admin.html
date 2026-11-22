@@ -100,6 +100,15 @@
               <div class="section-label">// QR SCANNER</div>
               <button class="toggle-scanner-btn" id="toggle-scanner">Start Camera</button>
             </div>
+            <div class="gate-day-bar" style="display:flex;flex-wrap:wrap;align-items:center;gap:0.75rem;margin:0 0 1rem;padding:0.85rem 1rem;background:rgba(122,39,169,0.08);border:1px solid rgba(122,39,169,0.2);border-radius:12px;">
+              <label for="gate-day-key" style="font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:0.06em;">Scanning for</label>
+              <select id="gate-day-key" class="field-input" style="min-width:160px;padding:0.55rem 0.75rem;font-size:0.9rem;">
+                <option value="day1">Day 1</option>
+                <option value="day2">Day 2</option>
+                <option value="day3">Day 3</option>
+              </select>
+              <span id="gate-day-hint" style="font-size:0.78rem;color:var(--text-muted);line-height:1.4;">Only tickets valid for this day will auto check in.</span>
+            </div>
             <div class="scanner-box" id="scanner-box">
               <div id="qr-reader"></div>
               <div class="scanner-overlay">
@@ -151,11 +160,13 @@
                   <div class="result-phone" id="result-phone">-</div>
                   <div class="result-ticket-id" id="result-ticket-id">-</div>
                   <div class="result-ticket-type" id="result-ticket-type">-</div>
+                  <div class="result-meta" id="result-valid-days" style="font-size:0.85rem;color:var(--text-muted);margin-top:0.2rem;font-weight:600;"></div>
                   <div class="result-meta" id="result-city" style="font-size:0.85rem;color:var(--text-muted);margin-top:0.25rem"></div>
                   <div class="result-meta" id="result-stay" style="font-size:0.85rem;color:var(--text-muted)"></div>
                 </div>
               </div>
               <div class="result-amount" id="result-amount">Paid: ₹-</div>
+              <div class="result-meta" id="result-check-ins" style="font-size:0.85rem;color:var(--text-muted);margin-top:0.35rem;font-weight:600;"></div>
               <button class="scan-next-btn" id="scan-next-valid">Scan Next →</button>
             </div>
             <div class="result-card invalid hidden" id="result-invalid">
@@ -168,6 +179,11 @@
               </div>
               <div class="invalid-reason" id="invalid-reason">-</div>
               <div class="invalid-detail" id="invalid-detail"></div>
+              <div id="invalid-force-wrap" class="hidden" style="margin-top:1rem;display:flex;flex-direction:column;gap:0.65rem;">
+                <label for="force-entry-reason" style="font-size:0.78rem;font-weight:600;color:var(--text);">Override reason (required)</label>
+                <input type="text" id="force-entry-reason" class="field-input" placeholder="e.g. Staff verified guest, special access" maxlength="200" />
+                <button class="scan-next-btn" id="force-entry-btn" type="button" style="background:var(--orange);">Allow entry anyway (manual override)</button>
+              </div>
               <button class="scan-next-btn" id="scan-next-invalid">Scan Next →</button>
             </div>
           </div>
@@ -234,6 +250,17 @@
               </div>
             </div>
 
+            <div class="field-group" style="grid-column:1/-1;">
+              <label class="field-label">Valid festival day(s) *</label>
+              <div id="tt-valid-days" style="display:flex;flex-wrap:wrap;gap:1rem 1.25rem;margin-top:0.35rem;">
+                <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;font-size:0.9rem;"><input type="checkbox" name="tt-day" value="day1" /> Day 1</label>
+                <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;font-size:0.9rem;"><input type="checkbox" name="tt-day" value="day2" /> Day 2</label>
+                <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;font-size:0.9rem;"><input type="checkbox" name="tt-day" value="day3" /> Day 3</label>
+                <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;font-size:0.9rem;"><input type="checkbox" name="tt-day" value="all" id="tt-day-all" /> All 3 days</label>
+              </div>
+              <span style="font-size:0.7rem;color:#9CA3AF;margin-top:0.35rem;display:block;">Scanners will reject this pass on other days unless an admin overrides manually.</span>
+            </div>
+
           </div>
           <div class="create-form-actions" style="gap:0.75rem;">
             <button class="create-submit-btn" id="create-tt-btn">+ Create Ticket Type</button>
@@ -255,6 +282,7 @@
                   <th>Label</th>
                   <th>Price</th>
                   <th>Sold / Capacity</th>
+                  <th>Valid days</th>
                   <th>Description</th>
                   <th>Status</th>
                   <th>Actions</th>
@@ -262,7 +290,7 @@
               </thead>
               <tbody id="tt-tbody">
                 <tr>
-                  <td colspan="7" class="table-loading">Loading ticket types...</td>
+                  <td colspan="8" class="table-loading">Loading ticket types...</td>
                 </tr>
               </tbody>
             </table>
@@ -416,12 +444,15 @@
                   <th>Amount Paid</th>
                   <th>Coupon</th>
                   <th>Registered</th>
+                  <th>Valid for</th>
+                  <th>Check-ins</th>
                   <th>Status</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody id="attendee-tbody">
                 <tr>
-                  <td colspan="11" class="table-loading">Loading attendees...</td>
+                  <td colspan="15" class="table-loading">Loading attendees...</td>
                 </tr>
               </tbody>
             </table>

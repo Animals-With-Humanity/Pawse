@@ -7,7 +7,7 @@
 
 const CONFIG = {
   // Your backend URL (no trailing slash)
-  //API_BASE: "http://localhost:3001",
+  // API_BASE: "http://localhost:3000",
   // Production: "https://your-app.onrender.com"
   API_BASE: "https://ticketbookingbackend-k2m9.onrender.com",
 
@@ -19,7 +19,7 @@ const CONFIG = {
   EVENT_DATE: "15-17 January 2027",
   EVENT_VENUE: "Bhopal - Bansal One Walk",
   EVENT_DESCRIPTION:
-    "PAWSE is Animals With Humanity’s pet-friendly community festival — paws, people, vegan food, music, adoption, and more. Book your pass and join us.",
+    "PAWSE is Central India's largest celebration of people, paws and planet.",
 
   // Ticket price in INR
   TICKET_PRICE: 250,

@@ -157,9 +157,103 @@
 
     @media (max-width: 480px) {
       .single-form-card {
-        padding: 1.5rem;
+        padding: 1.15rem 1rem;
       }
     }
+
+  /* ── Mobile layout: booking form & page ── */
+  .booking-layout,
+  .form-card.single-form-card,
+  #book .event-info {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  @media (max-width: 768px) {
+    .booking-section,
+    #FAQ.faq-section {
+      padding: 2.5rem 1rem 3.5rem;
+    }
+
+    .booking-layout {
+      gap: 1.25rem;
+    }
+
+    .form-card,
+    .single-form-card {
+      padding: 1.35rem 1rem;
+      border-radius: 16px;
+    }
+
+    .qty-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.85rem;
+    }
+
+    .coupon-input-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .coupon-input-row .coupon-apply-btn,
+    .coupon-input-row .coupon-remove-btn {
+      width: 100%;
+    }
+
+    .terms-accept-section .choice-row {
+      align-items: flex-start;
+    }
+
+    .terms-accept-section label {
+      line-height: 1.45;
+    }
+
+    .terms-modal {
+      padding: 0.75rem;
+      align-items: flex-end;
+    }
+
+    .terms-modal-panel {
+      max-height: 92vh;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .ticket-type-card {
+      flex-wrap: wrap;
+      gap: 0.65rem;
+    }
+
+    .ticket-type-name,
+    .ticket-type-desc {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
+      word-break: break-word;
+    }
+
+    .ticket-type-right {
+      width: 100%;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 0.35rem;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .pay-btn {
+      font-size: 0.95rem;
+      padding: 0.95rem 1rem;
+    }
+
+    .hero .cta-btn span {
+      font-size: 0.85rem;
+      line-height: 1.3;
+      text-align: center;
+    }
+  }
 
     .hero .hero-title {
       margin-bottom: 1rem;
@@ -832,7 +926,7 @@
   </header>
 
   <!-- Hero Section -->
-  <section class="hero" style="position:relative;overflow:visible;">
+  <section class="hero" style="position:relative;">
     <div class="hero-eyebrow">
       <span class="dot"></span>
       <span class="date-top" id="event-date-line">Dates coming soon | Bhopal - venue to be announced</span>
@@ -1207,22 +1301,22 @@
                 target="_blank" rel="noopener noreferrer">Bhopal - venue to be announced</a>
             </div>
           </div>
-          <div class="info-detail">
+          <!-- <div class="info-detail">
             <span class="info-icon">🎟️</span>
-            <div>
+            <!-- <div>
               <div class="info-detail-title">Pass Type</div>
               <div class="info-detail-val">Single Entry</div>
-            </div>
-          </div>
+            </div> -->
+          <!-- </div>  -->
         </div>
 
         <div class="info-card perks-card" id="event-perks">
           <div class="info-card-label">INCLUDED</div>
           <ul class="perks-list">
             <li class="perk-item"><span class="perk-check">✓</span>Paw-friendly zones &amp; adoption drives</li>
-            <li class="perk-item"><span class="perk-check">✓</span>100% vegan food &amp; sustainable stalls</li>
+            <li class="perk-item"><span class="perk-check">✓</span>vegan food &amp; sustainable stalls</li>
             <li class="perk-item"><span class="perk-check">✓</span>Music, games, workshops &amp; shopping</li>
-            <li class="perk-item"><span class="perk-check">✓</span>Proceeds support Animals With Humanity</li>
+            <li class="perk-item"><span class="perk-check">✓</span>Profit proceeds support animal rescue</li>
           </ul>
         </div>
       </aside>
