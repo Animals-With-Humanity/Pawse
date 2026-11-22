@@ -14,6 +14,7 @@ const state = {
   needYogaMat: false,
   city: "",
   requireStay: false,
+  stayDays: null,
   // Selected ticket type (required - no fallback)
   selectedTicketType: null,
   ticketTypesLoaded: false,
@@ -537,6 +538,16 @@ function validateForm() {
   const city = ($("city") && $("city").value.trim()) || "";
   const requireStay =
     document.querySelector('input[name="requireStay"]:checked')?.value === "yes";
+  let stayDays = null;
+  if (requireStay && $("stay-days")) {
+    const raw = $("stay-days").value.trim();
+    if (raw !== "") {
+      const n = parseInt(raw, 10);
+      if (!Number.isNaN(n) && n >= 1 && n <= 30) stayDays = n;
+    }
+  }
+  if ($("stay-days-err")) $("stay-days-err").textContent = "";
+  if ($("stay-days")) $("stay-days").classList.remove("error");
 
   if (name.length < 2) {
     $("name-err").textContent = "Please enter your full name";
@@ -589,8 +600,24 @@ function validateForm() {
     state.needYogaMat = needYogaMat;
     state.city = city;
     state.requireStay = requireStay;
+    state.stayDays = stayDays;
   }
   return ok;
+}
+
+function syncStayDaysField() {
+  const needsStay =
+    document.querySelector('input[name="requireStay"]:checked')?.value === "yes";
+  const group = $("stay-days-group");
+  const input = $("stay-days");
+  if (!group || !input) return;
+
+  group.classList.toggle("hidden", !needsStay);
+  if (!needsStay) {
+    input.value = "";
+    if ($("stay-days-err")) $("stay-days-err").textContent = "";
+    input.classList.remove("error");
+  }
 }
 
 /* ── WhatsApp toggle ──────────────────────────────────── */
@@ -598,6 +625,11 @@ $("is-whatsapp").addEventListener("change", (e) => {
   const group = $("whatsapp-group");
   if (group) group.classList.toggle("hidden", e.target.checked);
 });
+
+document.querySelectorAll('input[name="requireStay"]').forEach((radio) => {
+  radio.addEventListener("change", syncStayDaysField);
+});
+syncStayDaysField();
 
 /* ── Payment ──────────────────────────────────────────── */
 $("pay-btn").addEventListener("click", initiatePayment);
@@ -638,6 +670,7 @@ async function initiatePayment() {
       needYogaMat: state.needYogaMat,
       city: state.city,
       requireStay: state.requireStay,
+      stayDays: state.stayDays,
     };
 
     // Ticket type is required
