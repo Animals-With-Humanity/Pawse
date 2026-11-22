@@ -560,14 +560,8 @@ function validateForm() {
     $("phone-err").textContent = ""; $("phone").classList.remove("error");
   }
 
-  if (city.length < 2) {
-    if ($("city-err")) $("city-err").textContent = "Please enter your city";
-    if ($("city")) $("city").classList.add("error");
-    ok = false;
-  } else {
-    if ($("city-err")) $("city-err").textContent = "";
-    if ($("city")) $("city").classList.remove("error");
-  }
+  if ($("city-err")) $("city-err").textContent = "";
+  if ($("city")) $("city").classList.remove("error");
 
   if (!isWhatsapp && whatsapp.length > 0 && !/^[6-9]\d{9}$/.test(whatsapp)) {
     $("whatsapp-err").textContent = "Enter a valid 10-digit WhatsApp number";
@@ -580,6 +574,10 @@ function validateForm() {
   // Require a ticket type selection - no fallback
   if (!state.selectedTicketType) {
     showToast("Please select a ticket type", "error");
+    ok = false;
+  }
+
+  if (ok && !validateTermsAccepted()) {
     ok = false;
   }
 
@@ -605,6 +603,12 @@ $("is-whatsapp").addEventListener("change", (e) => {
 $("pay-btn").addEventListener("click", initiatePayment);
 
 async function initiatePayment() {
+  const termsOk = validateTermsAccepted({
+    scrollIntoView: true,
+    openModalOnFail: true,
+  });
+  if (!termsOk) return;
+
   if (!validateForm()) {
     const firstError = document.querySelector(".field-input.error");
     if (firstError) firstError.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -722,6 +726,204 @@ async function initiatePayment() {
   }
 }
 
+/* ── Event terms & conditions ─────────────────────────── */
+const EVENT_TERMS = [
+  {
+    title: "Entry pass & festival access",
+    summary:
+      "Your ticket grants entry to PAWSE for the day(s) covered by your pass type only.",
+    detail:
+      "PAWSE is a multi-day, open-format community festival. Your purchase is valid solely for the pass category selected at checkout (for example, a single-day pass or a three-day pass). Access is subject to verification at the venue and may be refused if the pass is invalid, duplicated, or misused.",
+  },
+  {
+    title: "Single-day vs three-day passes",
+    summary:
+      "A one-day pass is valid on one festival day only. A three-day pass is valid across all three days.",
+    detail:
+      "Unless you have explicitly purchased a three-day pass, your ticket applies to one calendar day of the event only. You cannot use a single-day pass on multiple days. If you are unsure which pass you bought, check your ticket type before arriving at the gate.",
+  },
+  {
+    title: "One-time entry (no re-entry)",
+    summary:
+      "Each pass allows a single entry. Once you leave the venue, the same pass cannot be used to enter again.",
+    detail:
+      "For security and crowd management, entry is one-time per issued pass. Plan your visit accordingly. Re-entry may only be permitted if expressly stated on your pass type or announced officially by the organisers—otherwise, exiting the venue ends your access for that day.",
+  },
+  {
+    title: "Gate entry & QR scan",
+    summary:
+      "Present your ticket (QR code) at the main gate. Our team will scan it before you enter.",
+    detail:
+      "Arrive with your digital or printed ticket ready. Screenshots are acceptable if clearly readable. Each QR is unique and tied to one attendee. Sharing, duplicating, or attempting multiple entries with the same code is prohibited and may result in cancellation without refund.",
+  },
+  {
+    title: "Activities, shops & stalls",
+    summary:
+      "Your entry pass does not include paid workshops, stalls, or add-on experiences.",
+    detail:
+      "Inside the festival you may find food vendors, merchandise, charity stalls, and ticketed or paid activities. Those are billed separately by the respective vendor or activity host. Prices and availability are set by each stall or partner; Animals With Humanity is not responsible for third-party charges or service quality.",
+  },
+  {
+    title: "Participating in activities",
+    summary:
+      "Follow instructions from volunteers, security, and stall teams when you join any activity.",
+    detail:
+      "Activities may have age limits, capacity caps, safety rules, or sign-up steps. By participating, you agree to comply with on-site directions. The organisers may pause or refuse participation if rules are not followed, for your safety and that of attendees, animals, and staff.",
+  },
+  {
+    title: "Bringing your pet",
+    summary:
+      "Pets are welcome only if leashed (or safely contained) and under your control at all times.",
+    detail:
+      "PAWSE is pet-friendly, but you are solely responsible for your animal’s behaviour, waste, hydration, and wellbeing. Aggressive, uncontrolled, or distressed animals may be asked to leave. Service animals are welcome in accordance with applicable law. The organisers reserve the right to restrict entry for animals if safety or welfare concerns arise.",
+  },
+  {
+    title: "Interacting with other pets",
+    summary:
+      "Always ask the pet parent before petting, feeding, or photographing someone else’s animal.",
+    detail:
+      "Not every pet is comfortable with strangers. Respect boundaries, avoid sudden contact, and follow any guidance the guardian gives. Children should be supervised near animals. Feeding animals without permission is not allowed.",
+  },
+  {
+    title: "Sustainable, eco-friendly conduct",
+    summary:
+      "Help us keep the venue clean: use bins, avoid single-use waste where possible, and respect the space.",
+    detail:
+      "PAWSE promotes sustainability and compassion. Do not litter, damage property, or disturb wildlife. Use designated disposal and recycling points. Vendors and attendees are encouraged to minimise plastic and waste throughout the festival.",
+  },
+  {
+    title: "Photography & social media",
+    summary:
+      "By attending, you agree that photos and videos from the event may be used for promotion and social media.",
+    detail:
+      "Official organisers and authorised partners may capture stills and footage for reporting, marketing, and community outreach (including social media). If you prefer not to appear in close-up promotional material, inform a team member on site where reasonably possible. You may also take personal photos respectfully, without harassing attendees, animals, or staff.",
+  },
+  {
+    title: "Personal belongings",
+    summary:
+      "You are responsible for your belongings. The organisers are not liable for loss, theft, or damage.",
+    detail:
+      "Please travel light and secure valuables. Lost-and-found may be operated on a best-effort basis at a designated desk; unclaimed items may be disposed of after the event. Report issues promptly to on-site volunteers.",
+  },
+  {
+    title: "Conduct, safety & removal",
+    summary:
+      "Maintain decorum. Intoxication, harassment, or rule-breaking can lead to removal without refund.",
+    detail:
+      "We are committed to a safe, inclusive, and family- and pet-friendly environment. Alcohol or substance misuse, abusive language, violence, discrimination, or disregard for staff instructions will not be tolerated. The event team may suspend or revoke your entry immediately, without refund, to protect other guests, animals, and property. Serious incidents may be reported to the authorities.",
+  },
+];
+
+function renderEventTerms() {
+  const list = $("terms-points-list");
+  if (!list) return;
+
+  list.innerHTML = EVENT_TERMS.map(
+    (item, index) => `
+    <article class="terms-point" data-term-index="${index}">
+      <h3 class="terms-point-title">${index + 1}. ${item.title}</h3>
+      <p class="terms-point-summary">${item.summary}</p>
+      <p class="terms-point-detail">${item.detail}</p>
+      <button type="button" class="terms-read-more" aria-expanded="false">Read more</button>
+    </article>`
+  ).join("");
+
+  list.querySelectorAll(".terms-read-more").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const point = btn.closest(".terms-point");
+      const open = point.classList.toggle("open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      btn.textContent = open ? "Show less" : "Read more";
+    });
+  });
+}
+
+function openTermsModal() {
+  const modal = $("terms-modal");
+  if (!modal) return;
+  modal.classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+}
+
+function closeTermsModal() {
+  const modal = $("terms-modal");
+  if (!modal) return;
+  modal.classList.add("hidden");
+  document.body.style.overflow = "";
+}
+
+function acceptTermsFromModal() {
+  const box = $("accept-terms");
+  const section = $("terms-accept-section");
+  const err = $("terms-err");
+  if (box) box.checked = true;
+  if (section) section.classList.remove("terms-accept-section--error");
+  if (err) err.textContent = "";
+  closeTermsModal();
+}
+
+function validateTermsAccepted({ scrollIntoView = false, openModalOnFail = false } = {}) {
+  const box = $("accept-terms");
+  const section = $("terms-accept-section");
+  const err = $("terms-err");
+  if (!box) return true;
+
+  if (box.checked) {
+    if (section) section.classList.remove("terms-accept-section--error");
+    if (err) err.textContent = "";
+    return true;
+  }
+
+  if (err) {
+    err.textContent = "Please read and accept the Terms & Conditions to continue.";
+  }
+  if (section) section.classList.add("terms-accept-section--error");
+  showToast("Please review and accept the Terms & Conditions before booking.", "error");
+  if (openModalOnFail) openTermsModal();
+  if (scrollIntoView && section) {
+    section.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+  return false;
+}
+
+function initTermsUI() {
+  renderEventTerms();
+
+  const inlineOpen = $("terms-open-inline");
+  if (inlineOpen) {
+    const openFromInline = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      openTermsModal();
+    };
+    inlineOpen.addEventListener("mousedown", (e) => e.preventDefault());
+    inlineOpen.addEventListener("click", openFromInline);
+    inlineOpen.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openTermsModal();
+      }
+    });
+  }
+
+  $("terms-modal-close")?.addEventListener("click", closeTermsModal);
+  $("terms-modal-backdrop")?.addEventListener("click", closeTermsModal);
+  $("terms-modal-agree")?.addEventListener("click", acceptTermsFromModal);
+
+  $("accept-terms")?.addEventListener("change", (e) => {
+    if (e.target.checked) {
+      $("terms-err").textContent = "";
+      $("terms-accept-section")?.classList.remove("terms-accept-section--error");
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !$("terms-modal")?.classList.contains("hidden")) {
+      closeTermsModal();
+    }
+  });
+}
+
 /* ── FAQ Accordion ────────────────────────────────────── */
 document.querySelectorAll(".faq-q").forEach((btn) => {
   btn.addEventListener("click", () => {
@@ -813,5 +1015,6 @@ document.querySelectorAll(".faq-q").forEach((btn) => {
 })();
 
 /* ── Init ─────────────────────────────────────────────── */
+initTermsUI();
 updatePriceDisplay();
 loadEventConfig().then(loadTicketTypes);

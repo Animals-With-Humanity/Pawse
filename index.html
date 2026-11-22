@@ -170,6 +170,8 @@
       width: min(520px, 88vw);
       height: auto;
       margin: 0 auto;
+      /* Lime wordmark PNG → brand blue (#2563eb) */
+      filter: brightness(0) saturate(100%) invert(33%) sepia(98%) saturate(2472%) hue-rotate(206deg) brightness(98%) contrast(96%);
     }
 
     .hero .hero-eyebrow {
@@ -241,7 +243,177 @@
       margin-top: 0.35rem;
     }
 
-    /* ── Ticket Type Cards ─── */
+    .terms-accept-section {
+      margin-top: 0.25rem;
+      padding: 1rem 1.1rem;
+      border: 1.5px solid rgba(122, 39, 169, 0.2);
+      border-radius: 12px;
+      background: rgba(122, 39, 169, 0.04);
+    }
+
+    .terms-accept-section.terms-accept-section--error {
+      border-color: #dc2626;
+      background: rgba(220, 38, 38, 0.05);
+    }
+
+    .terms-inline-link {
+      color: #7a27a9;
+      font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      cursor: pointer;
+    }
+
+    .terms-inline-link:hover {
+      color: #5b1d7e;
+    }
+
+    .terms-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+    }
+
+    .terms-modal.hidden {
+      display: none;
+    }
+
+    .terms-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 10, 25, 0.62);
+      backdrop-filter: blur(4px);
+    }
+
+    .terms-modal-panel {
+      position: relative;
+      width: min(640px, 100%);
+      max-height: min(88vh, 820px);
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
+      border: 1px solid rgba(122, 39, 169, 0.15);
+      overflow: hidden;
+    }
+
+    .terms-modal-header {
+      padding: 1.25rem 1.5rem 1rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .terms-modal-header h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #1f2937;
+      margin: 0 0 0.35rem;
+    }
+
+    .terms-modal-intro {
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: #4b5563;
+      margin: 0;
+    }
+
+    .terms-modal-body {
+      padding: 0.5rem 1.5rem 1rem;
+      overflow-y: auto;
+    }
+
+    .terms-point {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+      padding: 0.85rem 0;
+    }
+
+    .terms-point:last-child {
+      border-bottom: none;
+    }
+
+    .terms-point-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #7a27a9;
+      margin: 0 0 0.35rem;
+    }
+
+    .terms-point-summary {
+      font-size: 0.92rem;
+      line-height: 1.55;
+      color: #1f2937;
+      margin: 0;
+    }
+
+    .terms-point-detail {
+      display: none;
+      font-size: 0.86rem;
+      line-height: 1.65;
+      color: #4b5563;
+      margin: 0.65rem 0 0;
+    }
+
+    .terms-point.open .terms-point-detail {
+      display: block;
+    }
+
+    .terms-read-more {
+      margin-top: 0.45rem;
+      padding: 0;
+      border: none;
+      background: none;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #7a27a9;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .terms-modal-footer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: flex-end;
+      padding: 1rem 1.5rem 1.25rem;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      background: #fafafa;
+    }
+
+    .terms-modal-close {
+      padding: 0.65rem 1.1rem;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      background: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #374151;
+      cursor: pointer;
+    }
+
+    .terms-modal-agree {
+      padding: 0.65rem 1.15rem;
+      border-radius: 10px;
+      border: none;
+      background: #7a27a9;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #fff;
+      cursor: pointer;
+    }
+
+  /* ── Ticket Type Cards ─── */
     .ticket-type-card {
       display: flex;
       align-items: center;
@@ -841,7 +1013,7 @@
           </div>
 
           <div class="field-group">
-            <label class="field-label" for="city">Your city</label>
+            <label class="field-label" for="city">Your city <span style="font-weight:500;text-transform:none;letter-spacing:0;color:#9CA3AF">(optional)</span></label>
             <div class="field-wrap">
               <input type="text" id="city" class="field-input" placeholder="e.g. Bhopal, Indore, Delhi" autocomplete="address-level2" />
               <div class="field-border"></div>
@@ -976,6 +1148,18 @@
 
         <div id="pay-error" class="pay-error hidden"></div>
 
+        <div class="form-section terms-accept-section" id="terms-accept-section" style="margin-bottom:0;">
+          <div class="choice-row" style="align-items:flex-start;">
+            <input type="checkbox" id="accept-terms" aria-describedby="terms-err" />
+            <label for="accept-terms" style="flex:1;">
+              I have read and agree to the
+              <span class="terms-inline-link" id="terms-open-inline" role="button" tabindex="0">Terms &amp; Conditions</span>
+              for PAWSE (Animals With Humanity).
+            </label>
+          </div>
+          <span class="field-error" id="terms-err"></span>
+        </div>
+
         <button class="pay-btn" id="pay-btn" style="width:100%;margin-top:1.5rem;" disabled>
           <span id="pay-btn-text">Loading Tickets...</span>
           <div class="pay-spinner hidden" id="pay-spinner"></div>
@@ -1075,6 +1259,22 @@
   </footer>
 
   <div class="toast" id="toast"></div>
+
+  <div id="terms-modal" class="terms-modal hidden" role="dialog" aria-labelledby="terms-modal-title"
+    aria-modal="true">
+    <div class="terms-modal-backdrop" id="terms-modal-backdrop"></div>
+    <div class="terms-modal-panel">
+      <div class="terms-modal-header">
+        <h2 id="terms-modal-title">PAWSE — Terms &amp; Conditions</h2>
+        <p class="terms-modal-intro">Quick summary below. Tap <strong>Read more</strong> on any point for full details before you book.</p>
+      </div>
+      <div class="terms-modal-body" id="terms-points-list"></div>
+      <div class="terms-modal-footer">
+        <button type="button" class="terms-modal-close" id="terms-modal-close">Close</button>
+        <button type="button" class="terms-modal-agree" id="terms-modal-agree">I agree — continue booking</button>
+      </div>
+    </div>
+  </div>
 
   <script src="config.js"></script>
   <script src="app.js"></script>
